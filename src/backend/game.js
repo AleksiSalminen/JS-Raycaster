@@ -133,7 +133,13 @@ module.exports = {
           newPlayerPos.y = character.pos.y + Math.cos(character.pos.rotation) * (playerSpeed/2);
         }
         else if (params.dir === "RotLeft") {
-          newPlayerPos.rotation = character.pos.rotation - playerTurnSpeed;
+          if (params.movementX) {
+            newPlayerPos.rotation = character.pos.rotation + params.movementX/150;
+          }
+          else {
+            newPlayerPos.rotation = character.pos.rotation - playerTurnSpeed;
+          }
+
           if (newPlayerPos.rotation < 0) {
             newPlayerPos.rotation = 2 * Math.PI + newPlayerPos.rotation;
           }
@@ -142,7 +148,13 @@ module.exports = {
           }
         }
         else if (params.dir === "RotRight") {
-          newPlayerPos.rotation = character.pos.rotation + playerTurnSpeed;
+          if (params.movementX) {
+            newPlayerPos.rotation = character.pos.rotation + params.movementX/150;
+          }
+          else {
+            newPlayerPos.rotation = character.pos.rotation + playerTurnSpeed;
+          }
+
           if (newPlayerPos.rotation < 0) {
             newPlayerPos.rotation = 2 * Math.PI + newPlayerPos.rotation;
           }

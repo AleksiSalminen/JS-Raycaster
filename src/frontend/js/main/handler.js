@@ -59,7 +59,12 @@ function handleMouseMove(e) {
       e.webkitMovementX       ||
       0;
 
-  
+  if (movementX < 0) {
+    socket.emit('move', { dir: "RotLeft", number: playerNumber, movementX: movementX });
+  }
+  else if (movementX > 0) {
+    socket.emit('move', { dir: "RotRight", number: playerNumber, movementX: movementX });
+  }
 }
 
 /**
