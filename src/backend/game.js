@@ -164,7 +164,7 @@ module.exports = {
         }
 
         let hitWall = false;
-        let playerTileLoc = Math.floor(character.pos.y) * level.size + Math.floor(character.pos.x);
+        let playerTileLoc = Math.floor(newPlayerPos.y) * level.size + Math.floor(newPlayerPos.x);
         if (level.wallGrid[playerTileLoc] !== 0) {
           hitWall = true;
         }
