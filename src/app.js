@@ -27,6 +27,6 @@ const ip = "127.0.0.1";
 const port = 3000;
 
 server.listen(port, ip, () => {
-  console.log("UNO listening on " + ip + ":" + port);
+  console.log("App listening on " + ip + ":" + port);
 });
 

@@ -5,6 +5,8 @@ import { KEYBOARD } from './keyboard.js';
 const serverAddress = "http://localhost:3000";
 
 let playerNumber;
+let player;
+let level;
 
 /* Establish socket connection with the server backend */
 const socket = io(serverAddress);
@@ -31,7 +33,10 @@ function findPlayer(plNumber, players) {
 
 function updateGame(playerNumber, gameState) {
   console.log(gameState);
-  GRAPHICS.updateGraphics();
+
+  player = findPlayer(playerNumber, gameState.players);
+  level = gameState.level;
+  GRAPHICS.updateGraphics(player, level);
 }
 
 /**
@@ -39,11 +44,9 @@ function updateGame(playerNumber, gameState) {
  */
 function newGame() {
   const name = document.getElementById("name").value;
-  const gameCode = document.getElementById("newGameCodeInput").value;
   
   socket.emit('newGame', { 
-    name: name,
-    gameCode: gameCode
+    name: name
   });
 }
 document.getElementById('newGameButton').addEventListener('click', newGame);
@@ -59,14 +62,6 @@ function joinGame() {
 document.getElementById('joinGameButton').addEventListener('click', joinGame);
 
 /**
- * Emit a message to the server to start the game
- */
-function startGame() {
-  socket.emit('startGame', {});
-}
-document.getElementById('startGameButton').addEventListener('click', startGame);
-
-/**
  * Update the game according to the game state
  * @param {*} gameState the current game state
  */
@@ -78,9 +73,8 @@ function handleGameState(gameState) {
   updateGame(playerNumber, gameState);
 }
 
-function handleInit (plNumber, code) {
+function handleInit (plNumber) {
   playerNumber = plNumber;
-  gameCode = code;
 }
 
 /**
@@ -92,9 +86,23 @@ function sendKeysPressed () {
   for (let i = 0; i < keysPressed.length; i++) {
     let key = keysPressed[i];
 
-    // Just an example for now
     if (key === 87) { // W key
-      //socket.emit('move', { number: playerNumber });
+      socket.emit('move', { dir: "Forward", number: playerNumber });
+    }
+    else if (key === 83) { // S key
+      socket.emit('move', { dir: "Back", number: playerNumber });
+    }
+    else if (key === 65) { // A key
+      socket.emit('move', { dir: "Left", number: playerNumber });
+    }
+    else if (key === 68) { // D key
+      socket.emit('move', { dir: "Right", number: playerNumber });
+    }
+    else if (key === 37) { // Left arrow key
+      socket.emit('move', { dir: "RotLeft", number: playerNumber });
+    }
+    else if (key === 39) { // Right arrow key
+      socket.emit('move', { dir: "RotRight", number: playerNumber });
     }
   }
 }
