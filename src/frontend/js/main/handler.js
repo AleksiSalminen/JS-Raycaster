@@ -7,6 +7,7 @@ const serverAddress = "http://localhost:3000";
 let playerNumber;
 let player;
 let level;
+let canvas = document.getElementById('display');
 
 /* Establish socket connection with the server backend */
 const socket = io(serverAddress);
@@ -37,6 +38,28 @@ function updateGame(playerNumber, gameState) {
   player = findPlayer(playerNumber, gameState.players);
   level = gameState.level;
   GRAPHICS.updateGraphics(player, level);
+}
+
+canvas.onclick = function () {
+  canvas.requestPointerLock();
+};
+document.addEventListener('pointerlockchange', handlePointerLockChange, false);
+
+function handlePointerLockChange () {
+  if(document.pointerLockElement === canvas) {
+    document.addEventListener("mousemove", handleMouseMove, false);
+  } else {
+    document.removeEventListener("mousemove", handleMouseMove, false);
+  }
+}
+
+function handleMouseMove(e) {
+  let movementX = e.movementX ||
+      e.mozMovementX          ||
+      e.webkitMovementX       ||
+      0;
+
+  
 }
 
 /**
