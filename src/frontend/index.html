@@ -12,37 +12,26 @@
 
 <body id="body">
 
-	<section>
-		<div id="mainScreen">
-			<div id="initialScreen">
-				<div>
-					<h1>JS-Raycaster</h1>
-					</br>
-					<div>
-						<input type="text" placeholder="Your name" id="name" />
-					</div>
-					</br></br>
-					<button type="submit" id="newGameButton">
-						Create New Game
-					</button>
-					<div>OR</div>
-					<div>
-						<input type="text" placeholder="Enter Game Code" id="gameCodeInput" />
-					</div>
-					<button type="submit" id="joinGameButton">
-						Join Game
-					</button>
-				</div>
-			</div>
-
-			<div id="gameCodeDiv">
-				<!-- Here add the players' info when game started -->
-				<table id="players-table"></table>
-			</div>
+	<div id="titleScreen">
+		<h1>JS-Raycaster</h1>
+		</br>
+		<div>
+			<input type="text" placeholder="Your name" id="name" />
 		</div>
-	</section>
+		</br></br>
+		<button type="submit" id="newGameButton">
+			Create New Game
+		</button>
+		<div>OR</div>
+		<div>
+			<input type="text" placeholder="Enter Game Code" id="gameCodeInput" />
+		</div>
+		<button type="submit" id="joinGameButton">
+			Join Game
+		</button>
+	</div>
 
-	<canvas id='display' width='1' height='1' style='width: 100%; height: 100%;' />
+	<canvas id='gameDisplay' width='1' height='1' style='width: 100%; height: 100%;' />
 
 	<script type="text/javascript" src="./js/helpers/jquery.min.js"></script>
 

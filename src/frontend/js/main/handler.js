@@ -1,13 +1,11 @@
 
 import { GRAPHICS } from './graphics.js'
-import { KEYBOARD } from './keyboard.js'; 
+import { KEYBOARD } from './keyboard.js';
 
 const serverAddress = "http://localhost:3000";
 
 let playerNumber;
 let player;
-let level;
-let canvas = document.getElementById('display');
 
 /* Establish socket connection with the server backend */
 const socket = io(serverAddress);
@@ -18,62 +16,31 @@ socket.on("gameState", handleGameState);
 socket.on('unknownCode', handleUnknownCode);
 socket.on('tooManyPlayers', handleTooManyPlayers);
 
-/**
- * Finds a certain player from a list of players
- * @param {*} plNumber 
- * @param {*} players 
- */
-function findPlayer(plNumber, players) {
-  for (let i = 0; i < players.length; i++) {
-      let pl = players[i];
-      if (pl.number === plNumber) {
-          return pl;
-      }
-  }
-}
 
+/**
+ * Updates the game
+ * @param {*} playerNumber 
+ * @param {*} gameState 
+ */
 function updateGame(playerNumber, gameState) {
   console.log(gameState);
 
   player = findPlayer(playerNumber, gameState.players);
-  level = gameState.level;
-  GRAPHICS.updateGraphics(player, level);
+  GRAPHICS.updateGraphics(player, gameState.level);
 }
 
-canvas.onclick = function () {
-  canvas.requestPointerLock();
-};
-document.addEventListener('pointerlockchange', handlePointerLockChange, false);
 
-function handlePointerLockChange () {
-  if(document.pointerLockElement === canvas) {
-    document.addEventListener("mousemove", handleMouseMove, false);
-  } else {
-    document.removeEventListener("mousemove", handleMouseMove, false);
-  }
-}
-
-function handleMouseMove(e) {
-  let movementX = e.movementX ||
-      e.mozMovementX          ||
-      e.webkitMovementX       ||
-      0;
-
-  if (movementX < 0) {
-    socket.emit('move', { dir: "RotLeft", number: playerNumber, movementX: movementX });
-  }
-  else if (movementX > 0) {
-    socket.emit('move', { dir: "RotRight", number: playerNumber, movementX: movementX });
-  }
-}
+/**
+ * Game event handlers
+ */
 
 /**
  * Emit a message to the server to create a new game
  */
 function newGame() {
   const name = document.getElementById("name").value;
-  
-  socket.emit('newGame', { 
+
+  socket.emit('newGame', {
     name: name
   });
 }
@@ -90,26 +57,10 @@ function joinGame() {
 document.getElementById('joinGameButton').addEventListener('click', joinGame);
 
 /**
- * Update the game according to the game state
- * @param {*} gameState the current game state
- */
-function handleGameState(gameState) {
-  gameState = JSON.parse(gameState);
-  // Send the corresponding messages according to keys pressed
-  sendKeysPressed();
-  // Update the game according to the game state
-  updateGame(playerNumber, gameState);
-}
-
-function handleInit (plNumber) {
-  playerNumber = plNumber;
-}
-
-/**
  * Emits the corresponding messages to the server according to the 
  * keys pressed
  */
-function sendKeysPressed () {
+function sendKeysPressed() {
   const keysPressed = KEYBOARD.getKeysPressed();
   for (let i = 0; i < keysPressed.length; i++) {
     let key = keysPressed[i];
@@ -135,6 +86,45 @@ function sendKeysPressed () {
   }
 }
 
+function handleMouseMove(e) {
+  let movementX = e.movementX ||
+    e.mozMovementX ||
+    e.webkitMovementX ||
+    0;
+
+  if (movementX < 0) {
+    socket.emit('move', { dir: "RotLeft", number: playerNumber, movementX: movementX });
+  }
+  else if (movementX > 0) {
+    socket.emit('move', { dir: "RotRight", number: playerNumber, movementX: movementX });
+  }
+}
+
+
+/**
+ * Socket message receiver handlers
+ */
+
+/**
+ * Update the game according to the game state
+ * @param {*} gameState the current game state
+ */
+function handleGameState(gameState) {
+  gameState = JSON.parse(gameState);
+  // Send the corresponding messages according to keys pressed
+  sendKeysPressed();
+  // Update the game according to the game state
+  updateGame(playerNumber, gameState);
+}
+
+/**
+ * 
+ * @param {*} plNumber 
+ */
+function handleInit(plNumber) {
+  playerNumber = plNumber;
+}
+
 /**
  * If the player gave an unknown game code
  */
@@ -149,5 +139,39 @@ function handleUnknownCode() {
 function handleTooManyPlayers() {
   playerNumber = null;
   alert('Pelihuone on täynnä');
+}
+
+
+/**
+ * Other functions
+ */
+
+/**
+ * Finds a certain player from a list of players
+ * @param {*} plNumber 
+ * @param {*} players 
+ */
+function findPlayer(plNumber, players) {
+  for (let i = 0; i < players.length; i++) {
+    let pl = players[i];
+    if (pl.number === plNumber) {
+      return pl;
+    }
+  }
+}
+
+
+let gameDisplay = document.getElementById('gameDisplay');
+gameDisplay.onclick = function () {
+  gameDisplay.requestPointerLock();
+};
+document.addEventListener('pointerlockchange', handlePointerLockChange, false);
+
+function handlePointerLockChange() {
+  if (document.pointerLockElement === gameDisplay) {
+    document.addEventListener("mousemove", handleMouseMove, false);
+  } else {
+    document.removeEventListener("mousemove", handleMouseMove, false);
+  }
 }
 
