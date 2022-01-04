@@ -117,20 +117,20 @@ module.exports = {
         }
 
         if (params.dir === "Forward") {
-          newPlayerPos.x = character.pos.x - Math.sin(character.pos.rotation) * playerSpeed;
-          newPlayerPos.z = character.pos.z + Math.cos(character.pos.rotation) * playerSpeed;
+          newPlayerPos.x = character.pos.x + Math.sin(character.pos.rotation + Math.PI / 2) * playerSpeed;
+          newPlayerPos.y = character.pos.y - Math.cos(character.pos.rotation + Math.PI / 2) * playerSpeed;
         }
         else if (params.dir === "Back") {
-          newPlayerPos.x = character.pos.x + Math.sin(character.pos.rotation) * playerSpeed;
-          newPlayerPos.z = character.pos.z - Math.cos(character.pos.rotation) * playerSpeed;
+          newPlayerPos.x = character.pos.x + Math.sin(character.pos.rotation - Math.PI / 2) * playerSpeed;
+          newPlayerPos.y = character.pos.y - Math.cos(character.pos.rotation - Math.PI / 2) * playerSpeed;
         }
         else if (params.dir === "Left") {
-          newPlayerPos.x = character.pos.x + Math.sin(character.pos.rotation + Math.PI / 2) * playerSpeed;
-          newPlayerPos.z = character.pos.z - Math.cos(character.pos.rotation + Math.PI / 2) * playerSpeed;
+          newPlayerPos.x = character.pos.x + Math.sin(character.pos.rotation) * playerSpeed;
+          newPlayerPos.y = character.pos.y - Math.cos(character.pos.rotation) * playerSpeed;
         }
         else if (params.dir === "Right") {
-          newPlayerPos.x = character.pos.x + Math.sin(character.pos.rotation - Math.PI / 2) * playerSpeed;
-          newPlayerPos.z = character.pos.z - Math.cos(character.pos.rotation - Math.PI / 2) * playerSpeed;
+          newPlayerPos.x = character.pos.x - Math.sin(character.pos.rotation) * playerSpeed;
+          newPlayerPos.y = character.pos.y + Math.cos(character.pos.rotation) * playerSpeed;
         }
         else if (params.dir === "RotLeft") {
           newPlayerPos.rotation = character.pos.rotation - playerTurnSpeed;

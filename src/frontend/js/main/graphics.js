@@ -130,8 +130,8 @@ Camera.prototype.drawColumn = function (column, ray, angle, map) {
 
     for (var s = ray.length - 1; s >= 0; s--) {
         var step = ray[s];
-        var rainDrops = Math.pow(Math.random(), 3) * s;
-        var rain = (rainDrops > 0) && this.project(0.1, angle, step.distance);
+        //var rainDrops = Math.pow(Math.random(), 3) * s;
+        //var rain = (rainDrops > 0) && this.project(0.1, angle, step.distance);
 
         if (s === hit) {
             var textureX = Math.floor(texture.width * step.offset);
@@ -145,9 +145,9 @@ Camera.prototype.drawColumn = function (column, ray, angle, map) {
             ctx.fillRect(left, wall.top, width, wall.height);
         }
 
-        ctx.fillStyle = '#ffffff';
-        ctx.globalAlpha = 0.15;
-        while (--rainDrops > 0) ctx.fillRect(left, Math.random() * rain.top, 1, rain.height);
+        //ctx.fillStyle = '#ffffff';
+        //ctx.globalAlpha = 0.15;
+        //while (--rainDrops > 0) ctx.fillRect(left, Math.random() * rain.top, 1, rain.height);
     }
 };
 
@@ -166,6 +166,7 @@ var camera = new Camera(display, MOBILE ? 160 : 320, 0.8);
 
 function updateGraphics(player, level) {
   document.getElementById("mainScreen").style.display = "none";
+  display.getContext('2d').clearRect(0, 0, display.width, display.height);
   map = level;
   camera.render(player, level);
 }
