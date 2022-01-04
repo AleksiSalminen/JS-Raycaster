@@ -6,7 +6,7 @@ const FRAME_RATE = 30;
 
 const maxNumberOfPlayers = 4;
 const playerHealth = 100;
-const playerSpeed = 0.03;
+const playerSpeed = 0.04;
 const playerTurnSpeed = Math.PI * 0.04;
 
 module.exports = {
@@ -121,16 +121,16 @@ module.exports = {
           newPlayerPos.y = character.pos.y - Math.cos(character.pos.rotation + Math.PI / 2) * playerSpeed;
         }
         else if (params.dir === "Back") {
-          newPlayerPos.x = character.pos.x + Math.sin(character.pos.rotation - Math.PI / 2) * playerSpeed;
-          newPlayerPos.y = character.pos.y - Math.cos(character.pos.rotation - Math.PI / 2) * playerSpeed;
+          newPlayerPos.x = character.pos.x + Math.sin(character.pos.rotation - Math.PI / 2) * (playerSpeed/2);
+          newPlayerPos.y = character.pos.y - Math.cos(character.pos.rotation - Math.PI / 2) * (playerSpeed/2);
         }
         else if (params.dir === "Left") {
-          newPlayerPos.x = character.pos.x + Math.sin(character.pos.rotation) * playerSpeed;
-          newPlayerPos.y = character.pos.y - Math.cos(character.pos.rotation) * playerSpeed;
+          newPlayerPos.x = character.pos.x + Math.sin(character.pos.rotation) * (playerSpeed/2);
+          newPlayerPos.y = character.pos.y - Math.cos(character.pos.rotation) * (playerSpeed/2);
         }
         else if (params.dir === "Right") {
-          newPlayerPos.x = character.pos.x - Math.sin(character.pos.rotation) * playerSpeed;
-          newPlayerPos.y = character.pos.y + Math.cos(character.pos.rotation) * playerSpeed;
+          newPlayerPos.x = character.pos.x - Math.sin(character.pos.rotation) * (playerSpeed/2);
+          newPlayerPos.y = character.pos.y + Math.cos(character.pos.rotation) * (playerSpeed/2);
         }
         else if (params.dir === "RotLeft") {
           newPlayerPos.rotation = character.pos.rotation - playerTurnSpeed;
