@@ -79,11 +79,11 @@ function Camera(canvas, resolution, focalLength) {
 Camera.prototype.render = function (player, map) {
     this.drawSky(player.direction, map.skybox, map.light);
     this.drawColumns(player, map);
-    this.drawWeapon(player.weapon, player.paces);
+    this.drawWeapon(new Bitmap(player.weaponImg, 319, 320), player.paces);
 };
 
 Camera.prototype.drawSky = function (direction, sky, ambient) {
-  sky = new Bitmap(sky.location, sky.width, sky.height);
+  sky = new Bitmap('../../assets/deathvalley_panorama.jpg', 2000, 750);
   var width = sky.width * (this.height / sky.height) * 2;
     var left = (direction / CIRCLE) * -width;
 
@@ -105,7 +105,7 @@ Camera.prototype.drawColumns = function (player, map) {
     for (var column = 0; column < this.resolution; column++) {
         var x = column / this.resolution - 0.5;
         var angle = Math.atan2(x, this.focalLength);
-        var ray = castMap(player, player.direction + angle, this.range);
+        var ray = castMap(player.pos, player.pos.rotation + angle, this.range);
         this.drawColumn(column, ray, angle, map);
     }
     this.ctx.restore();
@@ -121,7 +121,7 @@ Camera.prototype.drawWeapon = function (weapon, paces) {
 
 Camera.prototype.drawColumn = function (column, ray, angle, map) {
     var ctx = this.ctx;
-    var texture = map.wallTexture;
+    var texture = new Bitmap('../../assets/wall_texture.jpg', 1024, 1024);
     var left = Math.floor(column * this.spacing);
     var width = Math.ceil(this.spacing);
     var hit = -1;
@@ -165,6 +165,7 @@ var display = document.getElementById('display');
 var camera = new Camera(display, MOBILE ? 160 : 320, 0.8);
 
 function updateGraphics(player, level) {
+  document.getElementById("mainScreen").style.display = "none";
   map = level;
   camera.render(player, level);
 }

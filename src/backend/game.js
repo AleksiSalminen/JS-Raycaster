@@ -182,10 +182,11 @@ function initGame(clientID, playerName) {
         number: 1,
         name: playerName,
         health: playerHealth,
+        weaponImg: '../../assets/knife_hand.png',
         gotHit: 0,
         pos: {
           x: 3,
-          y: 0,
+          y: 3,
           rotation: 0
         }
       }
