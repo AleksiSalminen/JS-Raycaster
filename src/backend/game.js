@@ -17,13 +17,12 @@ module.exports = {
   createNewGame(client, params) {
     let roomName = makeid(5);
     clientRooms[client.id] = roomName;
-    client.emit("gameCode", roomName);
 
     state[roomName] = initGame(client.id, params.name);
 
     client.join(roomName);
     client.number = 1;
-    client.emit("init", 1);
+    client.emit("init", 1, roomName);
 
     startGameInterval(roomName);
   },
@@ -69,8 +68,8 @@ module.exports = {
       health: playerHealth,
       gotHit: 0,
       pos: {
-        x: 3,
-        y: 0,
+        x: 2,
+        y: 2,
         rotation: 0
       }
     });

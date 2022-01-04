@@ -4,6 +4,7 @@ import { KEYBOARD } from './keyboard.js';
 
 const serverAddress = "http://localhost:3000";
 
+let gameCode;
 let playerNumber;
 let player;
 
@@ -23,10 +24,11 @@ socket.on('tooManyPlayers', handleTooManyPlayers);
  * @param {*} gameState 
  */
 function updateGame(playerNumber, gameState) {
+  console.log(gameCode);
   console.log(gameState);
 
   player = findPlayer(playerNumber, gameState.players);
-  GRAPHICS.updateGraphics(player, gameState.level);
+  GRAPHICS.updateGraphics(player, gameState.players, gameState.level);
 }
 
 
@@ -121,8 +123,9 @@ function handleGameState(gameState) {
  * 
  * @param {*} plNumber 
  */
-function handleInit(plNumber) {
+function handleInit(plNumber, code) {
   playerNumber = plNumber;
+  gameCode = code;
 }
 
 /**

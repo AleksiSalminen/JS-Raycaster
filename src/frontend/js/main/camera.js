@@ -45,9 +45,10 @@ function Camera(canvas, resolution, focalLength) {
 
 /** The main rendering method */
 
-Camera.prototype.render = function (player, level) {
+Camera.prototype.render = function (player, players, level) {
   this.drawSky(player.pos.rotation, level.light);
   this.drawColumns(player, level);
+  this.drawPlayers(players);
   this.drawWeapon();
 };
 
@@ -77,6 +78,12 @@ Camera.prototype.drawWeapon = function () {
   let top = this.height * 0.6;
   this.ctx.drawImage(weaponImg.image, left, top, weaponImg.width * this.scale, weaponImg.height * this.scale);
 };
+
+/** Draw (other) players */
+
+Camera.prototype.drawPlayers = function (players) {
+  
+}
 
 /** Draw columns */
 
