@@ -6,7 +6,7 @@ const FRAME_RATE = 30;
 
 const maxNumberOfPlayers = 4;
 const playerHealth = 100;
-const playerSpeed = 0.1;
+const playerSpeed = 0.03;
 const playerTurnSpeed = Math.PI * 0.04;
 
 module.exports = {
@@ -134,21 +134,27 @@ module.exports = {
         }
         else if (params.dir === "RotLeft") {
           newPlayerPos.rotation = character.pos.rotation - playerTurnSpeed;
+          if (newPlayerPos.rotation < 0) {
+            newPlayerPos.rotation = 2 * Math.PI + newPlayerPos.rotation;
+          }
+          else if (newPlayerPos.rotation > 2 * Math.PI) {
+            newPlayerPos.rotation -= 2 * Math.PI;
+          }
         }
         else if (params.dir === "RotRight") {
           newPlayerPos.rotation = character.pos.rotation + playerTurnSpeed;
+          if (newPlayerPos.rotation < 0) {
+            newPlayerPos.rotation = 2 * Math.PI + newPlayerPos.rotation;
+          }
+          else if (newPlayerPos.rotation > 2 * Math.PI) {
+            newPlayerPos.rotation -= 2 * Math.PI;
+          }
         }
 
         let hitWall = false;
-        for (let cv = level.wallGrid[0].length-1;cv >= 0;cv--) {
-          for (let bv = level.wallGrid.length-1;bv >= 0;bv--) {
-            if (level.wallGrid[bv][cv] === 1) {
-              if ((newPlayerPos.z+2+0.5 >= bv*2 && newPlayerPos.z+2-0.5 <= bv*2+2) &&
-              (newPlayerPos.x+0.5 >= cv*2-2 && newPlayerPos.x-0.5 <= cv*2)) {
-                hitWall = true;
-              }
-            }
-          }
+        let playerTileLoc = Math.floor(character.pos.y) * level.size + Math.floor(character.pos.x);
+        if (level.wallGrid[playerTileLoc] !== 0) {
+          hitWall = true;
         }
 
         if (!hitWall) {
@@ -185,8 +191,8 @@ function initGame(clientID, playerName) {
         weaponImg: '../../assets/knife_hand.png',
         gotHit: 0,
         pos: {
-          x: 3,
-          y: 3,
+          x: 2,
+          y: 2,
           rotation: 0
         }
       }
