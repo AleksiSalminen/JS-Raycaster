@@ -13,6 +13,7 @@ const MOBILE = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userA
 let weaponImg = new IMG_PROC.Bitmap('../../images/knife_hand.png', 319, 320);
 let skyImg = new IMG_PROC.Bitmap('../../images/deathvalley_panorama.jpg', 2000, 750);
 let wallImg = new IMG_PROC.Bitmap('../../images/wall_texture.jpg', 1024, 1024);
+let otherPlayerImg = new IMG_PROC.Bitmap('../../images/other_player/op_d_2.png', 21, 29);
 
 
 /** 
@@ -47,8 +48,7 @@ function Camera(canvas, resolution, focalLength) {
 
 Camera.prototype.render = function (player, players, level) {
   this.drawSky(player.pos.rotation, level.light);
-  this.drawColumns(player, level);
-  this.drawPlayers(players);
+  this.drawColumns(player, players, level);
   this.drawWeapon();
 };
 
@@ -79,20 +79,14 @@ Camera.prototype.drawWeapon = function () {
   this.ctx.drawImage(weaponImg.image, left, top, weaponImg.width * this.scale, weaponImg.height * this.scale);
 };
 
-/** Draw (other) players */
-
-Camera.prototype.drawPlayers = function (players) {
-  
-}
-
 /** Draw columns */
 
-Camera.prototype.drawColumns = function (player, level) {
+Camera.prototype.drawColumns = function (player, players, level) {
   this.ctx.save();
   for (let column = 0; column < this.resolution; column++) {
     let x = column / this.resolution - 0.5;
     let angle = Math.atan2(x, this.focalLength);
-    let ray = RAYCASTING.raycastMap(level, player.pos, player.pos.rotation + angle, this.range);
+    let ray = RAYCASTING.castRay(level, players, player.pos, player.pos.rotation + angle, this.range);
     this.drawColumn(column, ray, angle, level);
   }
   this.ctx.restore();
@@ -100,7 +94,6 @@ Camera.prototype.drawColumns = function (player, level) {
 
 Camera.prototype.drawColumn = function (column, ray, angle, level) {
   let ctx = this.ctx;
-  let texture = wallImg;
   let left = Math.floor(column * this.spacing);
   let width = Math.ceil(this.spacing);
   let hit = -1;
@@ -110,22 +103,44 @@ Camera.prototype.drawColumn = function (column, ray, angle, level) {
   for (let s = ray.length - 1; s >= 0; s--) {
     let step = ray[s];
 
-    if (s === hit) {
-      let textureX = Math.floor(texture.width * step.offset);
-      let wall = this.project(step.height, angle, step.distance);
+    if (step.player) {
+      console.log("AA");
+      let wallProj = this.objectProject(step.height, angle, step.distance);
 
       ctx.globalAlpha = 1;
-      ctx.drawImage(texture.image, textureX, 0, 1, texture.height, left, wall.top, width, wall.height);
+      ctx.drawImage(weaponImg.image, left, 0, 100, 100);
+
+      //ctx.fillStyle = '#000000';
+      //ctx.globalAlpha = Math.max((step.distance + step.shading) / this.lightRange - level.light, 0);
+      //ctx.fillRect(left, wallProj.top, width, wallProj.height);
+    }
+
+    if (s === hit) {
+      let textureX = Math.floor(wallImg.width * step.offset);
+      let wallProj = this.wallProject(step.height, angle, step.distance);
+
+      ctx.globalAlpha = 1;
+      ctx.drawImage(wallImg.image, textureX, 0, 1, wallImg.height, left, wallProj.top, width, wallProj.height);
 
       ctx.fillStyle = '#000000';
       ctx.globalAlpha = Math.max((step.distance + step.shading) / this.lightRange - level.light, 0);
-      ctx.fillRect(left, wall.top, width, wall.height);
+      ctx.fillRect(left, wallProj.top, width, wallProj.height);
     }
   }
 };
 
-Camera.prototype.project = function (height, angle, distance) {
+Camera.prototype.wallProject = function (height, angle, distance) {
   let z = distance * Math.cos(angle);
+  let wallHeight = this.height * height / z;
+  let bottom = this.height / 2 * (1 + 1 / z);
+  return {
+    top: bottom - wallHeight,
+    height: wallHeight
+  };
+};
+
+Camera.prototype.objectProject = function (height, angle, distance) {
+  let z = distance;
   let wallHeight = this.height * height / z;
   let bottom = this.height / 2 * (1 + 1 / z);
   return {

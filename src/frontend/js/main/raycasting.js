@@ -1,6 +1,6 @@
 
 
-function raycastMap(map, point, angle, range) {
+function castRay(map, players, point, angle, range) {
     let sin = Math.sin(angle);
     let cos = Math.cos(angle);
     let noWall = { length2: Infinity };
@@ -34,6 +34,7 @@ function raycastMap(map, point, angle, range) {
         let dy = sin < 0 ? shiftY : 0;
         step.height = getMapTile(step.x - dx, step.y - dy);
         step.distance = distance + Math.sqrt(step.length2);
+        step.player = getPlayer(step.x - dx, step.y - dy);
         if (shiftX) step.shading = cos < 0 ? 2 : 0;
         else step.shading = sin < 0 ? 2 : 1;
         step.offset = offset - Math.floor(offset);
@@ -46,11 +47,22 @@ function raycastMap(map, point, angle, range) {
         if (x < 0 || x > map.size - 1 || y < 0 || y > map.size - 1) return -1;
         return map.wallGrid[y * map.size + x];
     };
+
+    function getPlayer(x, y) {
+        for (let plI = 0;plI < players.length;plI++) {
+            const player = players[plI];
+            if (Math.floor(player.pos.x) === Math.floor(x)
+             && Math.floor(player.pos.y) === Math.floor(y)) {
+                return player;
+            }
+        }
+        return undefined;
+    }
 };
 
 
 const RAYCASTING = {
-    raycastMap
+    castRay
 };
 
 export {
