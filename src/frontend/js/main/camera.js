@@ -86,13 +86,13 @@ Camera.prototype.drawColumns = function (player, players, level) {
   for (let column = 0; column < this.resolution; column++) {
     let x = column / this.resolution - 0.5;
     let angle = Math.atan2(x, this.focalLength);
-    let ray = RAYCASTING.castRay(level, players, player.pos, player.pos.rotation + angle, this.range);
-    this.drawColumn(column, ray, angle, level);
+    let ray = RAYCASTING.castRay(level, player, players, player.pos, player.pos.rotation + angle, this.range);
+    this.drawColumn(column, ray, angle, level, player);
   }
   this.ctx.restore();
 };
 
-Camera.prototype.drawColumn = function (column, ray, angle, level) {
+Camera.prototype.drawColumn = function (column, ray, angle, level, player) {
   let ctx = this.ctx;
   let left = Math.floor(column * this.spacing);
   let width = Math.ceil(this.spacing);
@@ -103,10 +103,9 @@ Camera.prototype.drawColumn = function (column, ray, angle, level) {
   for (let s = ray.length - 1; s >= 0; s--) {
     let step = ray[s];
 
-    if (step.player) {
-      let playerHeight = 0.7;
+    if (step.playerHit) {
       let textureX = Math.floor(otherPlayerImg.width * step.offset);
-      let playerProj = this.objectProject(playerHeight, angle, step.distance);
+      let playerProj = this.objectProject(player.height, angle, step.distance);
 
       ctx.globalAlpha = 1;
       ctx.drawImage(otherPlayerImg.image, textureX, 0, 1, otherPlayerImg.height, left, playerProj.top, width, playerProj.height);
@@ -115,7 +114,7 @@ Camera.prototype.drawColumn = function (column, ray, angle, level) {
       ctx.globalAlpha = Math.max((step.distance + step.shading) / this.lightRange - level.light, 0);
       ctx.fillRect(left, playerProj.top, width, playerProj.height);
     }
-    else if (s === hit) {
+    if (s === hit) {
       let textureX = Math.floor(wallImg.width * step.offset);
       let wallProj = this.wallProject(step.height, angle, step.distance);
 

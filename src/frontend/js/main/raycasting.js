@@ -1,6 +1,6 @@
 
 
-function castRay(map, players, point, angle, range) {
+function castRay(map, player, players, point, angle, range) {
     let sin = Math.sin(angle);
     let cos = Math.cos(angle);
     let noWall = { length2: Infinity };
@@ -34,7 +34,7 @@ function castRay(map, players, point, angle, range) {
         let dy = sin < 0 ? shiftY : 0;
         step.height = getMapTile(step.x - dx, step.y - dy);
         step.distance = distance + Math.sqrt(step.length2);
-        step.player = getPlayer(step.x - dx, step.y - dy);
+        step.playerHit = getPlayerHit(step.x - dx, step.y - dy);
         if (shiftX) step.shading = cos < 0 ? 2 : 0;
         else step.shading = sin < 0 ? 2 : 1;
         step.offset = offset - Math.floor(offset);
@@ -48,14 +48,56 @@ function castRay(map, players, point, angle, range) {
         return map.wallGrid[y * map.size + x];
     };
 
-    function getPlayer(x, y) {
+    function getPlayerHit(x, y) {
         for (let plI = 0;plI < players.length;plI++) {
-            const player = players[plI];
-            if (Math.floor(player.pos.x) === Math.floor(x)
-             && Math.floor(player.pos.y) === Math.floor(y)) {
-                return player;
+            const chosenPlayer = players[plI];
+            if (chosenPlayer.number !== player.number) {
+                if (Math.floor(chosenPlayer.pos.x) - Math.floor(x)
+                 && Math.floor(chosenPlayer.pos.y) - Math.floor(y)) {
+                    return checkTileForPlayer(chosenPlayer, {x,y});
+                }
             }
         }
+        return undefined;
+    }
+
+    function checkTileForPlayer (player, rayPos) {
+        const increment = 0.1;
+        const accuracy = 1;
+        const plPos = {
+            x: player.pos.x,
+            y: player.pos.y
+        };
+        let rayOutsideBounds = false;
+        let tile = {
+            x: Math.floor(rayPos.x),
+            y: Math.floor(rayPos.y)
+        }
+        let plRay = {
+            x: rayPos.x,
+            y: rayPos.y,
+            distance: 0
+        };
+        while (!rayOutsideBounds) {
+            // Check if ray is very close to the player
+            if (Math.abs(plRay.x - plPos.x) <= accuracy
+             && Math.abs(plRay.y - plPos.y) <= accuracy) {
+                plRay.player = player;
+                return plRay;
+            }
+
+            // Update the ray
+            plRay.x += cos * increment;
+            plRay.y += sin * increment;
+            plRay.distance += increment;
+
+            // If ray went over to other tile
+            if (Math.floor(plRay.x) !== tile.x
+             || Math.floor(plRay.y) !== tile.y) {
+                rayOutsideBounds = true;
+            }
+        }
+
         return undefined;
     }
 };

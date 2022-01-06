@@ -66,6 +66,8 @@ module.exports = {
       number: state[roomName].players[playerAmount-1].number + 1,
       name: params.name,
       health: playerHealth,
+      height: 0.7,
+      width: 0.4,
       gotHit: 0,
       pos: {
         x: 2,
@@ -199,6 +201,8 @@ function initGame(clientID, playerName) {
         number: 1,
         name: playerName,
         health: playerHealth,
+        height: 0.7,
+        width: 0.4,
         weaponImg: '../../assets/knife_hand.png',
         gotHit: 0,
         pos: {
