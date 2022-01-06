@@ -104,18 +104,18 @@ Camera.prototype.drawColumn = function (column, ray, angle, level) {
     let step = ray[s];
 
     if (step.player) {
-      console.log("AA");
-      let wallProj = this.objectProject(step.height, angle, step.distance);
+      let playerHeight = 0.7;
+      let textureX = Math.floor(otherPlayerImg.width * step.offset);
+      let playerProj = this.objectProject(playerHeight, angle, step.distance);
 
       ctx.globalAlpha = 1;
-      ctx.drawImage(weaponImg.image, left, 0, 100, 100);
+      ctx.drawImage(otherPlayerImg.image, textureX, 0, 1, otherPlayerImg.height, left, playerProj.top, width, playerProj.height);
 
-      //ctx.fillStyle = '#000000';
-      //ctx.globalAlpha = Math.max((step.distance + step.shading) / this.lightRange - level.light, 0);
-      //ctx.fillRect(left, wallProj.top, width, wallProj.height);
+      ctx.fillStyle = '#000000';
+      ctx.globalAlpha = Math.max((step.distance + step.shading) / this.lightRange - level.light, 0);
+      ctx.fillRect(left, playerProj.top, width, playerProj.height);
     }
-
-    if (s === hit) {
+    else if (s === hit) {
       let textureX = Math.floor(wallImg.width * step.offset);
       let wallProj = this.wallProject(step.height, angle, step.distance);
 
