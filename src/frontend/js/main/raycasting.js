@@ -49,21 +49,25 @@ function castRay(map, player, players, point, angle, range) {
     };
 
     function getPlayerHit(x, y) {
-        for (let plI = 0;plI < players.length;plI++) {
-            const chosenPlayer = players[plI];
-            if (chosenPlayer.number !== player.number) {
-                if (Math.floor(chosenPlayer.pos.x) - Math.floor(x)
-                 && Math.floor(chosenPlayer.pos.y) - Math.floor(y)) {
-                    return checkTileForPlayer(chosenPlayer, {x,y});
+        if (players.length - 1 > 0) {
+            for (let plI = 0;plI < players.length;plI++) {
+                const chosenPlayer = players[plI];
+                if (chosenPlayer.number !== player.number) {
+                    if (Math.floor(chosenPlayer.pos.x) === Math.floor(x)
+                     && Math.floor(chosenPlayer.pos.y) === Math.floor(y)) {
+                        //return chosenPlayer;
+                        return checkTileForPlayer(chosenPlayer, {x,y});
+                    }
                 }
             }
         }
+        
         return undefined;
     }
 
     function checkTileForPlayer (player, rayPos) {
-        const increment = 0.1;
-        const accuracy = 1;
+        const increment = 0.05;
+        const accuracy = 0.1;
         const plPos = {
             x: player.pos.x,
             y: player.pos.y

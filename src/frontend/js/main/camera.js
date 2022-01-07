@@ -103,17 +103,6 @@ Camera.prototype.drawColumn = function (column, ray, angle, level, player) {
   for (let s = ray.length - 1; s >= 0; s--) {
     let step = ray[s];
 
-    if (step.playerHit) {
-      let textureX = Math.floor(otherPlayerImg.width * step.offset);
-      let playerProj = this.objectProject(player.height, angle, step.distance);
-
-      ctx.globalAlpha = 1;
-      ctx.drawImage(otherPlayerImg.image, textureX, 0, 1, otherPlayerImg.height, left, playerProj.top, width, playerProj.height);
-
-      ctx.fillStyle = '#000000';
-      ctx.globalAlpha = Math.max((step.distance + step.shading) / this.lightRange - level.light, 0);
-      ctx.fillRect(left, playerProj.top, width, playerProj.height);
-    }
     if (s === hit) {
       let textureX = Math.floor(wallImg.width * step.offset);
       let wallProj = this.wallProject(step.height, angle, step.distance);
@@ -124,6 +113,18 @@ Camera.prototype.drawColumn = function (column, ray, angle, level, player) {
       ctx.fillStyle = '#000000';
       ctx.globalAlpha = Math.max((step.distance + step.shading) / this.lightRange - level.light, 0);
       ctx.fillRect(left, wallProj.top, width, wallProj.height);
+    }
+    
+    if (step.playerHit) {
+      let textureX = Math.floor(otherPlayerImg.width * step.offset);
+      let playerProj = this.objectProject(player.height, angle, step.distance + step.playerHit.distance);
+
+      ctx.globalAlpha = 1;
+      ctx.drawImage(otherPlayerImg.image, textureX, 0, 1, otherPlayerImg.height, left, playerProj.top, width, playerProj.height);
+
+      ctx.fillStyle = '#000000';
+      ctx.globalAlpha = Math.max((step.distance + step.shading) / this.lightRange - level.light, 0);
+      ctx.fillRect(left, playerProj.top, width, playerProj.height);
     }
   }
 };
