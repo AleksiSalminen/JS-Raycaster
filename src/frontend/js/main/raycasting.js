@@ -53,8 +53,10 @@ function castRay(map, player, players, point, angle, range) {
             for (let plI = 0;plI < players.length;plI++) {
                 const chosenPlayer = players[plI];
                 if (chosenPlayer.number !== player.number) {
-                    if (Math.floor(chosenPlayer.pos.x) === Math.floor(x)
-                     && Math.floor(chosenPlayer.pos.y) === Math.floor(y)) {
+                    const xDiff = Math.floor(chosenPlayer.pos.x) - Math.floor(x);
+                    const yDiff = Math.floor(chosenPlayer.pos.y) - Math.floor(y);
+                    if ((xDiff === -1 || xDiff === 0 || xDiff === 1)
+                     && (yDiff === -1 || yDiff === 0 || yDiff === 1)) {
                         //return chosenPlayer;
                         return checkTileForPlayer(chosenPlayer, {x,y});
                     }
@@ -73,15 +75,12 @@ function castRay(map, player, players, point, angle, range) {
             y: player.pos.y
         };
         let rayOutsideBounds = false;
-        let tile = {
-            x: Math.floor(rayPos.x),
-            y: Math.floor(rayPos.y)
-        }
         let plRay = {
             x: rayPos.x,
             y: rayPos.y,
             distance: 0
         };
+        
         while (!rayOutsideBounds) {
             // Check if ray is very close to the player
             if (Math.abs(plRay.x - plPos.x) <= accuracy
@@ -95,9 +94,11 @@ function castRay(map, player, players, point, angle, range) {
             plRay.y += sin * increment;
             plRay.distance += increment;
 
-            // If ray went over to other tile
-            if (Math.floor(plRay.x) !== tile.x
-             || Math.floor(plRay.y) !== tile.y) {
+            let x = Math.floor(plRay.x);
+            let y = Math.floor(plRay.y);
+            // If ray went outside given bounds
+            if (x < plPos.x-1 || x > plPos.x+1
+             || y < plPos.y-1 || y > plPos.y+1) {
                 rayOutsideBounds = true;
             }
         }
