@@ -34,7 +34,7 @@ function castRay(map, player, players, point, angle, range) {
         let dy = sin < 0 ? shiftY : 0;
         step.height = getMapTile(step.x - dx, step.y - dy);
         step.distance = distance + Math.sqrt(step.length2);
-        step.playerHit = getPlayerHit(step.x - dx, step.y - dy);
+        //step.playerHit = getPlayerHit(step.x - dx, step.y - dy);
         if (shiftX) step.shading = cos < 0 ? 2 : 0;
         else step.shading = sin < 0 ? 2 : 1;
         step.offset = offset - Math.floor(offset);

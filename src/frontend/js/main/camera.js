@@ -88,12 +88,12 @@ Camera.prototype.drawColumns = function (player, players, level) {
     let x = column / this.resolution - 0.5;
     let angle = Math.atan2(x, this.focalLength);
     let ray = RAYCASTING.castRay(level, player, players, player.pos, player.pos.rotation + angle, this.range);
-    this.drawColumn(column, ray, angle, level, player);
+    this.drawColumn(column, ray, angle, level, player, players);
   }
   this.ctx.restore();
 };
 
-Camera.prototype.drawColumn = function (column, ray, angle, level, player) {
+Camera.prototype.drawColumn = function (column, ray, angle, level, player, players) {
   let ctx = this.ctx;
   let left = Math.floor(column * this.spacing);
   let width = Math.ceil(this.spacing);
@@ -116,6 +116,9 @@ Camera.prototype.drawColumn = function (column, ray, angle, level, player) {
       ctx.fillRect(left, wallProj.top, width, wallProj.height);
     }
 
+    this.drawPlayers(player, players, step.distance);
+
+    /*
     if (step.playerHit) {
       let textureX = Math.floor(otherPlayerImg.width * step.offset);
       let playerProj = this.objectProject(player.height, angle, step.distance + step.playerHit.distance);
@@ -127,6 +130,7 @@ Camera.prototype.drawColumn = function (column, ray, angle, level, player) {
       ctx.globalAlpha = Math.max((step.distance + step.shading) / this.lightRange - level.light, 0);
       ctx.fillRect(left, playerProj.top, width, playerProj.height);
     }
+    */
   }
 };
 
@@ -139,6 +143,24 @@ Camera.prototype.wallProject = function (height, angle, distance) {
     height: wallHeight
   };
 };
+
+/** Draw players */
+
+Camera.prototype.drawPlayers = function (player, players, stepDistance) {
+  let chosenPlayer;
+  let plDist;
+  let angle = Math.atan2(0, this.focalLength);
+
+  // Go through other players
+  for (let plI = 0;plI < players.length;plI++) {
+    chosenPlayer = players[plI];
+    plDist = chosenPlayer.pos.distances;
+    if (chosenPlayer.number !== player.number 
+     && plDist.distanceFromPlayer > stepDistance) {
+      
+    }
+  }
+}
 
 Camera.prototype.objectProject = function (height, angle, distance) {
   let z = distance;
