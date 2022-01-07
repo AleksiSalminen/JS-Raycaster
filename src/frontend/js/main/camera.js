@@ -162,6 +162,7 @@ Camera.prototype.updatePlayerDistances = function (player, players) {
   let distanceFromPlayer = 0;
   let distanceFromLine = 0;
   let lineLength = 0;
+  let lineToP2Angle = 0;
 
   /** Calculate the line function */
 
@@ -199,11 +200,15 @@ Camera.prototype.updatePlayerDistances = function (player, players) {
         Math.pow(distanceFromLine, 2)
       ) );
 
+      // The angle between the player line and player 2
+      lineToP2Angle = Math.atan( distanceFromLine / lineLength );
+
       // Update distances information
       pl2Pos.distances = {
         fromPlayer: distanceFromPlayer,
         fromLine: distanceFromLine,
-        lineLength: lineLength
+        lineLength: lineLength,
+        lineToP2Angle: lineToP2Angle
       };
 
     }
