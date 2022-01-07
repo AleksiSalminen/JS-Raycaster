@@ -67,7 +67,7 @@ function castRay(map, player, players, point, angle, range) {
 
     function checkTileForPlayer (player, rayPos) {
         const increment = 0.05;
-        const accuracy = 0.1;
+        const accuracy = player.width/2;
         const plPos = {
             x: player.pos.x,
             y: player.pos.y
