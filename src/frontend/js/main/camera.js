@@ -48,7 +48,6 @@ function Camera(canvas, resolution, focalLength) {
 
 Camera.prototype.render = function (player, players, level) {
   this.updatePlayerDistances(player, players);
-  console.log(players[0].pos.distances);
   this.drawSky(player.pos.rotation, level.light);
   this.drawColumns(player, players, level);
   this.drawWeapon();
