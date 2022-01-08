@@ -89,7 +89,9 @@ Camera.prototype.drawColumns = function (player, players, level) {
     let angle = Math.atan2(x, this.focalLength);
     let ray = RAYCASTING.castRay(level, player, players, player.pos, player.pos.rotation + angle, this.range);
     this.drawColumn(column, ray, angle, level, player, players);
+    //this.drawSprite(player, players, angle);
   }
+  this.drawSprite2(player, players, this.focalLength);
   this.ctx.restore();
 };
 
@@ -116,7 +118,7 @@ Camera.prototype.drawColumn = function (column, ray, angle, level, player, playe
       ctx.fillRect(left, wallProj.top, width, wallProj.height);
     }
 
-    this.drawPlayers(player, players, step.distance);
+    //this.drawPlayers(player, players, step.distance);
 
     /*
     if (step.playerHit) {
@@ -152,12 +154,72 @@ Camera.prototype.drawPlayers = function (player, players, stepDistance) {
   let angle = Math.atan2(0, this.focalLength);
 
   // Go through other players
-  for (let plI = 0;plI < players.length;plI++) {
+  for (let plI = 0; plI < players.length; plI++) {
     chosenPlayer = players[plI];
     plDist = chosenPlayer.pos.distances;
-    if (chosenPlayer.number !== player.number 
-     && plDist.distanceFromPlayer > stepDistance) {
-      
+    if (chosenPlayer.number !== player.number
+      && plDist.distanceFromPlayer > stepDistance) {
+
+    }
+  }
+}
+
+Camera.prototype.drawSprite = function (player, players, angle) {
+  let ctx = this.ctx;
+  let player2;
+
+  for (let plI = 0; plI < players.length; plI++) {
+    player2 = players[plI];
+
+    if (player2.number !== player.number) {
+
+      let sx = player2.pos.x - player.pos.x;
+      let sy = player2.pos.y - player.pos.y;
+      let sz = player2.pos.distances.distanceFromPlayer;
+
+      let cos = Math.cos(angle);
+      let sin = Math.sin(angle);
+      let a = sy * cos + sx * sin;
+      let b = sx * cos - sy * sin;
+      sx = a;
+      sy = b;
+      sx = (sx * 2 / sy) + (120 / 2);
+      sy = (sz * 2 / sy) + (80 / 2);
+
+      ctx.globalAlpha = 1;
+      ctx.drawImage(wallImg.image, sx, sy, 100, 100);
+    }
+  }
+}
+
+Camera.prototype.drawSprite2 = function (player, players, angle) {
+  let ctx = this.ctx;
+  let theta = angle;
+  let startAngle = this.focalLength * (180 / Math.PI);
+  let player2;
+
+  for (let plI = 0; plI < players.length; plI++) {
+    player2 = players[plI];
+    if (player2.number !== player.number) {
+      // Try to render a sprite
+      let xInc = (player2.pos.x - player.pos.x);  // theSprites<i>.x = sprites x coordinate in game world, x = player's x coordinate in world
+      let yInc = (player2.pos.y - player.pos.y);  // Same as above
+
+      let thetaTemp = Math.atan2(yInc, xInc);  // Find angle between player and sprite
+      thetaTemp *= (180 / Math.PI);  // Convert to degrees
+      if (thetaTemp < 0) thetaTemp += 360;  // Make sure its in proper range
+      console.log(thetaTemp);
+
+      // Wrap things around if needed
+      let yTmp = theta + startAngle - thetaTemp;  // Theta + 30 = angle of ray that generates leftmost collum of the screen
+      if (thetaTemp > 270 && theta < 90) yTmp = theta + startAngle - thetaTemp + 360;
+      if (theta > 270 && thetaTemp < 90) yTmp = theta + startAngle - thetaTemp - 360;
+
+      // Compute the screen x coordinate
+      let xTmp = yTmp * this.width / 60.0;
+
+      ctx.globalAlpha = 1;
+      ctx.drawImage(wallImg.image, xTmp, yTmp, 100, 100);
     }
   }
 }
@@ -217,13 +279,13 @@ Camera.prototype.updatePlayerDistances = function (player, players) {
         ;
 
       // Line length
-      lineLength = Math.sqrt( Math.abs(
+      lineLength = Math.sqrt(Math.abs(
         Math.pow(distanceFromPlayer, 2) -
         Math.pow(distanceFromLine, 2)
-      ) );
+      ));
 
       // The angle between the player line and player 2
-      lineToP2Angle = Math.atan( distanceFromLine / lineLength );
+      lineToP2Angle = Math.atan(distanceFromLine / lineLength);
 
       // Update distances information
       pl2Pos.distances = {
