@@ -116,22 +116,6 @@ Camera.prototype.drawColumn = function (column, ray, angle, level, player, playe
       ctx.globalAlpha = Math.max((step.distance + step.shading) / this.lightRange - level.light, 0);
       ctx.fillRect(left, wallProj.top, width, wallProj.height);
     }
-
-    //this.drawPlayers(player, players, step.distance);
-
-    /*
-    if (step.playerHit) {
-      let textureX = Math.floor(otherPlayerImg.width * step.offset);
-      let playerProj = this.objectProject(player.height, angle, step.distance + step.playerHit.distance);
-
-      ctx.globalAlpha = 1;
-      ctx.drawImage(otherPlayerImg.image, textureX, 0, 1, otherPlayerImg.height, left, playerProj.top, width, playerProj.height);
-
-      ctx.fillStyle = '#000000';
-      ctx.globalAlpha = Math.max((step.distance + step.shading) / this.lightRange - level.light, 0);
-      ctx.fillRect(left, playerProj.top, width, playerProj.height);
-    }
-    */
   }
 };
 
@@ -163,14 +147,18 @@ Camera.prototype.drawSprite = function (player, players, angle) {
       thetaTemp *= (180 / Math.PI);  // Convert to degrees
       if (thetaTemp < 0) thetaTemp += 360;  // Make sure its in proper range
       
-      let a = 0 / this.resolution - 0.5;
-      let b = 1 / this.resolution - 0.5;
+      /*
+      let a = 1 / this.resolution - 0.5;
+      let b = 2 / this.resolution - 0.5;
       let angle1 = Math.atan2(a, this.focalLength) * (180 / Math.PI);
       let angle2 = Math.atan2(b, this.focalLength) * (180 / Math.PI);
-      let angleUnit = Math.abs(angle1 - angle2);
+      let angleUnit = Math.abs(angle1 - angle2) * player2.pos.distances.fromPlayer;
+      */
+
+      let angleUnit = this.focalLength * (180 / Math.PI) / this.resolution;
 
       let angleDiff = thetaTemp - theta;
-      if (thetaTemp > 270 && theta < 90) angleDiff -=360;
+      if (thetaTemp > 270 && theta < 90) angleDiff -= 360;
       if (theta > 270 && thetaTemp < 90) angleDiff += 360;
       
       let height = this.height * player2.height / player2.pos.distances.fromPlayer;
@@ -178,7 +166,7 @@ Camera.prototype.drawSprite = function (player, players, angle) {
       let width = height / player2.height * player2.width;
 
       let yTmp = bottom - height;
-      let xTmp = (angleDiff/angleUnit) * this.width/this.resolution + this.width/2 - width/2;
+      let xTmp = (angleDiff/angleUnit) * this.spacing + this.width/2 - width/2;
 
       ctx.globalAlpha = 1;
       ctx.drawImage(otherPlayerImg.image, xTmp, yTmp, width, height);
