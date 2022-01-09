@@ -226,7 +226,8 @@ Camera.prototype.drawSprite2 = function (player, players, angle) {
       let height = this.height * player2.height / player2.pos.distances.fromPlayer;
       let width = height / player2.height * player2.width
 
-      let yTmp = this.height/2 - height/2;
+      let bottom = this.height / 2 * (1 + 1 / player2.pos.distances.fromPlayer);
+      let yTmp = bottom - height;
 
       // Wrap things around if needed
       //let yTmp = theta + startAngle + thetaTemp;  // Theta + 30 = angle of ray that generates leftmost collum of the screen
@@ -237,7 +238,7 @@ Camera.prototype.drawSprite2 = function (player, players, angle) {
       //let xTmp = yTmp * this.width / 60.0;
 
       ctx.globalAlpha = 1;
-      ctx.drawImage(wallImg.image, xTmp, yTmp, width, height);
+      ctx.drawImage(otherPlayerImg.image, xTmp, yTmp, width, height);
     }
   }
 }
