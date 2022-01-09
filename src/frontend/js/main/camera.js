@@ -91,7 +91,7 @@ Camera.prototype.drawColumns = function (player, players, level) {
     this.drawColumn(column, ray, angle, level, player, players);
     //this.drawSprite(player, players, angle);
   }
-  this.drawSprite2(player, players, this.focalLength);
+  this.drawSprite2(player, players, player.pos.rotation);
   this.ctx.restore();
 };
 
@@ -194,9 +194,10 @@ Camera.prototype.drawSprite = function (player, players, angle) {
 
 Camera.prototype.drawSprite2 = function (player, players, angle) {
   let ctx = this.ctx;
-  let theta = angle;
-  let startAngle = this.focalLength * (180 / Math.PI);
+  let theta = angle * (180 / Math.PI);
+  let startAngle = player.pos.rotation * (180 / Math.PI) + Math.atan2(0.5, this.focalLength) * (180 / Math.PI);
   let player2;
+  //console.log(theta);
 
   for (let plI = 0; plI < players.length; plI++) {
     player2 = players[plI];
@@ -208,18 +209,35 @@ Camera.prototype.drawSprite2 = function (player, players, angle) {
       let thetaTemp = Math.atan2(yInc, xInc);  // Find angle between player and sprite
       thetaTemp *= (180 / Math.PI);  // Convert to degrees
       if (thetaTemp < 0) thetaTemp += 360;  // Make sure its in proper range
-      console.log(thetaTemp);
+      //console.log(thetaTemp);
+
+      let a = 0 / this.resolution - 0.5;
+      let b = 1 / this.resolution - 0.5;
+      let angle1 = Math.atan2(a, this.focalLength) * (180 / Math.PI);
+      let angle2 = Math.atan2(b, this.focalLength) * (180 / Math.PI);
+      let angleUnit = Math.abs(angle1 - angle2);
+
+      let angleDiff = thetaTemp - theta;
+      if (thetaTemp > 270 && theta < 90) angleDiff -=360;
+      if (theta > 270 && thetaTemp < 90) angleDiff += 360;
+
+      let xTmp = (angleDiff/angleUnit) * this.width/this.resolution + this.width/2 - 50;
+      
+      let height = this.height * player2.height / player2.pos.distances.fromPlayer;
+      let width = height / player2.height * player2.width
+
+      let yTmp = this.height/2 - height/2;
 
       // Wrap things around if needed
-      let yTmp = theta + startAngle - thetaTemp;  // Theta + 30 = angle of ray that generates leftmost collum of the screen
-      if (thetaTemp > 270 && theta < 90) yTmp = theta + startAngle - thetaTemp + 360;
-      if (theta > 270 && thetaTemp < 90) yTmp = theta + startAngle - thetaTemp - 360;
+      //let yTmp = theta + startAngle + thetaTemp;  // Theta + 30 = angle of ray that generates leftmost collum of the screen
+      //if (thetaTemp > 270 && theta < 90) yTmp = theta + startAngle - thetaTemp + 360;
+      //if (theta > 270 && thetaTemp < 90) yTmp = theta + startAngle - thetaTemp - 360;
 
       // Compute the screen x coordinate
-      let xTmp = yTmp * this.width / 60.0;
+      //let xTmp = yTmp * this.width / 60.0;
 
       ctx.globalAlpha = 1;
-      ctx.drawImage(wallImg.image, xTmp, yTmp, 100, 100);
+      ctx.drawImage(wallImg.image, xTmp, yTmp, width, height);
     }
   }
 }
