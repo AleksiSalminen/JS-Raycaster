@@ -84,17 +84,18 @@ Camera.prototype.drawWeapon = function () {
 
 Camera.prototype.drawColumns = function (player, players, level) {
   this.ctx.save();
+  let zBuffer = [];
   for (let column = 0; column < this.resolution; column++) {
     let x = column / this.resolution - 0.5;
     let angle = Math.atan2(x, this.focalLength);
     let ray = RAYCASTING.castRay(level, player, players, player.pos, player.pos.rotation + angle, this.range);
-    this.drawColumn(column, ray, angle, level, player, players);
+    this.drawColumn(column, ray, angle, level, player, players, zBuffer);
   }
-  this.drawSprite(player, players, player.pos.rotation);
+  this.drawPlayers(player, players, player.pos.rotation, zBuffer);
   this.ctx.restore();
 };
 
-Camera.prototype.drawColumn = function (column, ray, angle, level, player, players) {
+Camera.prototype.drawColumn = function (column, ray, angle, level, player, players, zBuffer) {
   let ctx = this.ctx;
   let left = Math.floor(column * this.spacing);
   let width = Math.ceil(this.spacing);
@@ -115,6 +116,9 @@ Camera.prototype.drawColumn = function (column, ray, angle, level, player, playe
       ctx.fillStyle = '#000000';
       ctx.globalAlpha = Math.max((step.distance + step.shading) / this.lightRange - level.light, 0);
       ctx.fillRect(left, wallProj.top, width, wallProj.height);
+    
+      zBuffer.push(step.distance);
+      s = -1;
     }
   }
 };
@@ -129,39 +133,75 @@ Camera.prototype.wallProject = function (height, angle, distance) {
   };
 };
 
-/** Draw sprites */
+/** Draw players */
 
-Camera.prototype.drawSprite = function (player, players, angle) {
-  let ctx = this.ctx;
-  let theta = angle * (180 / Math.PI);
+Camera.prototype.drawPlayers = function (player, players, angle, zBuffer) {
   let player2;
 
   for (let plI = 0; plI < players.length; plI++) {
     player2 = players[plI];
     if (player2.number !== player.number) {
-      
-      let xInc = (player2.pos.x - player.pos.x);  // theSprites<i>.x = sprites x coordinate in game world, x = player's x coordinate in world
-      let yInc = (player2.pos.y - player.pos.y);  // Same as above
-
-      let thetaTemp = Math.atan2(yInc, xInc);  // Find angle between player and sprite
-      thetaTemp *= (180 / Math.PI);  // Convert to degrees
-      if (thetaTemp < 0) thetaTemp += 360;  // Make sure its in proper range
-      
-      let angleDiff = thetaTemp - theta;
-      if (thetaTemp > 270 && theta < 90) angleDiff -= 360;
-      if (theta > 270 && thetaTemp < 90) angleDiff += 360;
-      
-      let height = this.height * player2.height / player2.pos.distances.fromPlayer;
-      let bottom = this.height / 2 * (1 + 1 / player2.pos.distances.fromPlayer);
-      let width = height / player2.height * player2.width;
-
-      let yTmp = bottom - height;
-      let xTmp = angleDiff * this.width / (this.focalLength * (180/Math.PI) * 1.5) + this.width/2 - width/2;
-
-      ctx.globalAlpha = 1;
-      ctx.drawImage(otherPlayerImg.image, xTmp, yTmp, width, height);
+      this.drawSprite(player, player2, angle, otherPlayerImg, zBuffer);
     }
   }
+}
+
+/** Draw sprites */
+
+Camera.prototype.drawSprite = function (player, player2, angle, texture, zBuffer) {
+  let ctx = this.ctx;
+  let theta = angle * (180 / Math.PI);
+  
+  let xInc = (player2.pos.x - player.pos.x);  // theSprites<i>.x = sprites x coordinate in game world, x = player's x coordinate in world
+  let yInc = (player2.pos.y - player.pos.y);  // Same as above
+
+  let thetaTemp = Math.atan2(yInc, xInc);  // Find angle between player and sprite
+  thetaTemp *= (180 / Math.PI);  // Convert to degrees
+  if (thetaTemp < 0) thetaTemp += 360;  // Make sure its in proper range
+
+  let angleDiff = thetaTemp - theta;
+  if (thetaTemp > 270 && theta < 90) angleDiff -= 360;
+  if (theta > 270 && thetaTemp < 90) angleDiff += 360;
+
+  let height = this.height * player2.height / player2.pos.distances.fromPlayer;
+  let bottom = this.height / 2 * (1 + 1 / player2.pos.distances.fromPlayer);
+  let width = height / player2.height * player2.width;
+
+  let yTmp = bottom - height;
+  let xTmp = angleDiff * this.width / (this.focalLength * (180 / Math.PI) * 1.5) + this.width / 2 - width / 2;
+
+  let startX = Math.floor(xTmp - width/2);
+  let endX = Math.floor(xTmp + width/2);
+  let depthCheckStart = Math.floor(startX / this.spacing);
+  let depthCheckEnd = Math.floor(endX / this.spacing);
+
+  let wallAtBeginning = false;
+  for (let col = depthCheckStart;col <= depthCheckEnd;col++) {
+    // See if there are walls in front of the sprite
+    if (zBuffer[col] < player2.pos.distances.fromPlayer) {
+      if (col === depthCheckStart) {
+        wallAtBeginning = true;
+      }
+      
+      if (wallAtBeginning) {
+        startX = col+1;
+      }
+      else {
+        endX = col+1;
+      }
+    }
+  }
+  startX = startX * this.spacing;
+  endX = endX * this.spacing;
+
+  let clipStart = startX / this.width * texture.width;
+
+  ctx.globalAlpha = 1;
+  ctx.drawImage(
+    texture.image, 
+    clipStart, 0, texture.width-clipStart, texture.height, 
+    startX, yTmp, endX-startX, height
+  );
 }
 
 Camera.prototype.objectProject = function (height, angle, distance) {
