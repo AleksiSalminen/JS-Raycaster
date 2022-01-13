@@ -7,13 +7,16 @@ module.exports = { io };
 /* Require the socket handler, so that it is loaded on start-up */
 require("./backend/handler");
 
+/* Require the config file */
+const config = require("../def/config/config.json");
+
 let path = require("path");
 let favicon = require("serve-favicon");
 
 
 /* Express-paths */
 
-app.use(favicon(path.join(__dirname, "favicon.ico")));
+app.use(favicon(path.join(__dirname, "../" + config.favicon)));
 app.use("/", express.static(path.join(__dirname, "frontend")));
 
 app.get("/", (req, res) => {
@@ -23,8 +26,8 @@ app.get("/", (req, res) => {
 
 /* Start the application */
 
-const ip = "127.0.0.1";
-const port = 3000;
+const ip = config.ip;
+const port = config.port;
 
 server.listen(port, ip, () => {
   console.log("App listening on " + ip + ":" + port);
