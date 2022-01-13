@@ -170,10 +170,10 @@ Camera.prototype.drawSprite = function (player, player2, angle, texture, zBuffer
   let yTmp = bottom - height;
   let xTmp = angleDiff * this.width / (this.focalLength * (180 / Math.PI) * 1.5) + this.width / 2 - width / 2;
 
-  let startX = Math.floor(xTmp - width/2);
-  let endX = Math.floor(xTmp + width/2);
-  let depthCheckStart = Math.floor(startX / this.spacing);
-  let depthCheckEnd = Math.floor(endX / this.spacing);
+  let startX = Math.floor(xTmp / this.spacing);
+  let endX = Math.floor((xTmp + width) / this.spacing);
+  let depthCheckStart = startX;
+  let depthCheckEnd = endX;
 
   let wallAtBeginning = false;
   for (let col = depthCheckStart;col <= depthCheckEnd;col++) {
@@ -194,7 +194,8 @@ Camera.prototype.drawSprite = function (player, player2, angle, texture, zBuffer
   startX = startX * this.spacing;
   endX = endX * this.spacing;
 
-  let clipStart = startX / this.width * texture.width;
+  let clipStart = texture.width - ((endX - startX) / width * texture.width);
+  console.log("(" + endX + " - " + startX + ") / " + width + " * " + texture.width + " = " + clipStart);
 
   ctx.globalAlpha = 1;
   ctx.drawImage(
