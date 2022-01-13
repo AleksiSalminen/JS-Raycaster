@@ -3,6 +3,7 @@ const { level } = require('./level');
 const config = require("../../def/config/config.json");
 const state = {};
 const clientRooms = {};
+const Player = require("./objects/player");
 
 const FRAME_RATE = config.framerate;
 const maxNumberOfPlayers = config.maxNumberOfPlayers;
@@ -18,6 +19,28 @@ module.exports = {
   createNewGame(client, params) {
     let roomName = makeid(5);
     clientRooms[client.id] = roomName;
+
+    /** Just trying out the player object */
+    /*
+    let pl1 = new Player(
+      "CoolDude", 
+      playerHealth, 
+      playerHealth,
+      playerSpeed,
+      playerTurnSpeed,
+      {
+        x: 2,
+        y: 2,
+        rotation: 0
+      }
+    );
+
+    console.log(pl1.getName());
+    console.log(pl1.getTurnSpd());
+    console.log(pl1.getPosition());
+    console.log(pl1.name);
+    */
+    /** */
 
     state[roomName] = initGame(client.id, params.name);
 
