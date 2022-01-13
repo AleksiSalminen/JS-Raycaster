@@ -184,23 +184,33 @@ Camera.prototype.drawSprite = function (player, player2, angle, texture, zBuffer
       }
       
       if (wallAtBeginning) {
-        startX = col+1;
+        startX = col;
       }
       else {
-        endX = col+1;
+        endX = col-1;
+        col = depthCheckEnd;
       }
     }
   }
   startX = startX * this.spacing;
   endX = endX * this.spacing;
 
-  let clipStart = texture.width - ((endX - startX) / width * texture.width);
-  console.log("(" + endX + " - " + startX + ") / " + width + " * " + texture.width + " = " + clipStart);
+  let clipStart = 0;
+  let clipEnd = 0;
+
+  if (wallAtBeginning) {
+    clipStart = texture.width - ((endX - startX) / width * texture.width);
+    clipEnd = texture.width-clipStart;
+  }
+  else {
+    clipStart = 0;
+    clipEnd = (endX - startX) / width * texture.width;
+  }
 
   ctx.globalAlpha = 1;
   ctx.drawImage(
     texture.image, 
-    clipStart, 0, texture.width-clipStart, texture.height, 
+    clipStart, 0, clipEnd, texture.height, 
     startX, yTmp, endX-startX, height
   );
 }
