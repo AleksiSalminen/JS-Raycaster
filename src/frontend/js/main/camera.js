@@ -152,25 +152,25 @@ Camera.prototype.drawPlayerName = function (player, players, angle) {
 
 /** Draw sprites */
 
-Camera.prototype.drawSprite = function (player, sprite, angle, texture, zBuffer) {
+Camera.prototype.drawSprite = function (object, sprite, angle, texture, zBuffer) {
   let ctx = this.ctx;
   // Player rotation to degrees
   angle = angle * (180 / Math.PI);
 
-  // Find the distances between sprite and player
-  let xDist = sprite.pos.x - player.pos.x;
-  let yDist = sprite.pos.y - player.pos.y;
-  let dist = Math.sqrt(Math.pow((player.pos.x - sprite.pos.x), 2) + Math.pow((player.pos.y - sprite.pos.y), 2));
+  // Find the distances between sprite and object
+  let xDist = sprite.pos.x - object.pos.x;
+  let yDist = sprite.pos.y - object.pos.y;
+  let dist = Math.sqrt(Math.pow((object.pos.x - sprite.pos.x), 2) + Math.pow((object.pos.y - sprite.pos.y), 2));
 
   // Angle between sprite and player
-  let spritePlayerAngle = Math.atan2(yDist, xDist);
-  spritePlayerAngle *= (180 / Math.PI);
-  if (spritePlayerAngle < 0) spritePlayerAngle += 360;
+  let spriteObjectAngle = Math.atan2(yDist, xDist);
+  spriteObjectAngle *= (180 / Math.PI);
+  if (spriteObjectAngle < 0) spriteObjectAngle += 360;
 
   // Get the angle difference
-  let angleDiff = spritePlayerAngle - angle;
-  if (spritePlayerAngle > 270 && angle < 90) angleDiff -= 360;
-  if (angle > 270 && spritePlayerAngle < 90) angleDiff += 360;
+  let angleDiff = spriteObjectAngle - angle;
+  if (spriteObjectAngle > 270 && angle < 90) angleDiff -= 360;
+  if (angle > 270 && spriteObjectAngle < 90) angleDiff += 360;
 
   // Get the drawn sprite measures
   let height = this.height * sprite.height / dist;
