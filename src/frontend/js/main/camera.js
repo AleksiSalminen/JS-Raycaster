@@ -135,13 +135,13 @@ Camera.prototype.wallProject = function (height, angle, distance) {
 /** Draw players */
 
 Camera.prototype.drawPlayers = function (player, players, angle, zBuffer) {
-  let player2;
+  let otherPlayer;
 
   for (let plI = 0; plI < players.length; plI++) {
-    player2 = players[plI];
-    if (player2.number !== player.number) {
-      this.drawSprite(player, player2, angle, otherPlayerImg, zBuffer);
-      this.drawPlayerName(player, player2, angle);
+    otherPlayer = players[plI];
+    if (otherPlayer.number !== player.number) {
+      this.drawSprite(player, otherPlayer, angle, otherPlayerImg, zBuffer);
+      this.drawPlayerName(player, otherPlayer, angle);
     }
   }
 }
