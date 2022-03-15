@@ -34,7 +34,7 @@ function Camera(canvas, resolution, focalLength) {
   this.resolution = resolution;
   this.spacing = this.width / resolution;
   this.focalLength = focalLength || 0.8;
-  this.range = MOBILE ? 8 : 14;
+  this.range = MOBILE ? 20 : 30;
   this.lightRange = 10;
   this.scale = (this.width + this.height) / 1200;
 }
@@ -225,8 +225,12 @@ Camera.prototype.compareZBuffer = function (startX, endX, dist, zBuffer) {
   // Z-Buffer comparisons
   let wallAtBeginning = false;
   for (let col = depthCheckStart; col <= depthCheckEnd; col++) {
+    // Check if compared value is outside draw distance
+    if (!zBuffer[col]) {
+      
+    }
     // See if there are walls in front of the sprite
-    if (zBuffer[col] < dist) {
+    else if (zBuffer[col] < dist) {
       if (col === depthCheckStart) {
         wallAtBeginning = true;
       }
