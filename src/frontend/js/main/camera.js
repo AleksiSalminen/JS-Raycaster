@@ -219,6 +219,11 @@ Camera.prototype.drawSprite = function (player, sprite, angle, texture, zBuffer)
     clipEnd = (endX - startX) / width * texture.width;
   }
 
+  // Set the brightness according to distance
+  let distShading = 100 / dist * this.lightRange / 4;
+  distShading = distShading > 100 ? 100 : distShading;
+  ctx.filter = "brightness(" + distShading + "%)";
+
   // Draw the sprite
   ctx.globalAlpha = 1;
   ctx.drawImage(
@@ -226,6 +231,9 @@ Camera.prototype.drawSprite = function (player, sprite, angle, texture, zBuffer)
     clipStart, 0, clipEnd, texture.height,
     startX, yTmp, endX - startX, height
   );
+
+  // Set brightness back to normal
+  ctx.filter = "brightness(100%)";
 }
 
 Camera.prototype.compareZBuffer = function (startX, endX, dist, zBuffer) {
