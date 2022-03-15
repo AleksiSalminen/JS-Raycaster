@@ -247,16 +247,6 @@ Camera.prototype.compareZBuffer = function (startX, endX, dist, zBuffer) {
   return { startX: startX, endX: endX, wallAtBeginning: wallAtBeginning };
 }
 
-Camera.prototype.objectProject = function (height, angle, distance) {
-  let z = distance;
-  let wallHeight = this.height * height / z;
-  let bottom = this.height / 2 * (1 + 1 / z);
-  return {
-    top: bottom - wallHeight,
-    height: wallHeight
-  };
-};
-
 
 /** Exports */
 
