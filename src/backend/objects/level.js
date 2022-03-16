@@ -11,15 +11,18 @@ class Level {
         
         this.fileName = fileName;
         this.name = levelInfo.name;
+        this.light = levelInfo.light;
         this.skybox = levelInfo.skybox;
         this.wallTextures = levelInfo.wallTextures;
         this.walls = levelInfo.walls;
+        this.size = levelInfo.size;
     }
     
 
     /** Getters */
     getFileName () { return this.fileName; }
     getName () { return this.name; }
+    getLight () { return this.light; }
     getSkyBox () { return this.skybox; }
     getWallTextures () { return this.wallTextures; }
     getWalls () { return this.walls; }
@@ -30,6 +33,9 @@ class Level {
     }
     setName (newName) {
         if (newName && newName.length > 0) { this.name = newName; }
+    }
+    setLight (newLight) {
+        if (newLight >= 0) { this.light = newLight; }
     }
     setSkyBox (newSkyBox) {
         if (newSkyBox && newSkyBox.length > 0) { this.skybox = newSkyBox; }

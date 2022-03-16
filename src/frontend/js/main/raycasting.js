@@ -44,7 +44,7 @@ function castRay(map, player, players, point, angle, range) {
         x = Math.floor(x);
         y = Math.floor(y);
         if (x < 0 || x > map.size - 1 || y < 0 || y > map.size - 1) return -1;
-        return map.wallGrid[y * map.size + x];
+        return map.walls[y * map.size + x];
     };
 
     function getPlayerHit(x, y) {

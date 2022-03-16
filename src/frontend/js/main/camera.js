@@ -108,7 +108,7 @@ Camera.prototype.drawColumn = function (column, ray, angle, level, player, playe
     if (s === hit) {
       let textureX = Math.floor(wallImg.width * step.offset);
       let wallProj = this.wallProject(step.height, angle, step.distance);
-
+      
       ctx.globalAlpha = 1;
       ctx.drawImage(wallImg.image, textureX, 0, 1, wallImg.height, left, wallProj.top, width, wallProj.height);
 

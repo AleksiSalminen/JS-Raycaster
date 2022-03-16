@@ -1,5 +1,4 @@
 const { io } = require('./handler');
-const { level } = require('./level');
 const config = require("../../def/config/config.json");
 const state = {};
 const clientRooms = {};
@@ -14,6 +13,7 @@ const playerTurnSpeed = Math.PI * config.playerTurnSpeed;
 const Player = require("./objects/player");
 const Level = require('./objects/level');
 
+
 module.exports = {
 
   /**
@@ -23,8 +23,11 @@ module.exports = {
     let roomName = helpers.makeid(5);
     clientRooms[client.id] = roomName;
 
-    /* Test level */
-    const level1 = new Level("test-level.lvl", {}, {});
+    const level1 = new Level(
+      "test-level.lvl", 
+      {}, 
+      {}
+    );
 
     const pl1 = new Player(
       client.id, 
@@ -44,7 +47,7 @@ module.exports = {
     );
   
     state[roomName] = {
-      level: level,
+      level: level1,
       players: [pl1]
     };
 
@@ -193,8 +196,8 @@ module.exports = {
         }
 
         let hitWall = false;
-        let playerTileLoc = Math.floor(newPlayerPos.y) * level.size + Math.floor(newPlayerPos.x);
-        if (level.wallGrid[playerTileLoc] !== 0) {
+        let playerTileLoc = Math.floor(newPlayerPos.y) * stateCurrent.level.size + Math.floor(newPlayerPos.x);
+        if (stateCurrent.level.getWalls()[playerTileLoc] !== 0) {
           hitWall = true;
         }
 

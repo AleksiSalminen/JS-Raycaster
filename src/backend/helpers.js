@@ -32,6 +32,10 @@ module.exports = {
         i++;
         info.name = data[i]
       }
+      else if (line == "Light:") {
+        i++;
+        info.light = parseInt(data[i]);
+      }
       else if (line == "Skybox:") {
         i++;
         info.skybox = data[i]
@@ -56,6 +60,8 @@ module.exports = {
         info.walls = walls;
       }
     }
+
+    info.size = info.walls[0].length/2;
 
     let formattedWalls = [];
     for (let k = 0; k < info.walls.length; k++) {
