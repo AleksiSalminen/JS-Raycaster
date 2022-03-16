@@ -6,7 +6,7 @@ class CharacterAnimation extends Animation {
         super(delay);
         this.direction = direction;
         this.side = side;
-        this.frame_sets = {
+        this.frameSets = {
             "DIR_TOWARDS":    [ 0, 1, 2, 3, 4],
             "DIR_AWAY":       [ 5, 6, 7, 8, 9],
             "DIR_LEFT":       [10,11,12,13,14],
@@ -16,7 +16,9 @@ class CharacterAnimation extends Animation {
             "DIR_AWAY_LEFT":  [30,31,32,33,34],
             "DIR_AWAY_RIGHT": [35,36,37,38,39]
         };
-        this.frame_set = this.frame_sets[direction];
+        this.frameSet = this.frameSets[direction];
+        let spriteIndex = this.frameSet[this.frameIndex];
+        this.rowIndex = Math.floor(spriteIndex/5);
     }
 }
 
@@ -31,7 +33,7 @@ class Character {
         this.height = height;
         this.width = width;
         this.animation = new CharacterAnimation(
-            15, "DIR_TOWARDS", "SIDE_MIDDLE"
+            15, "DIR_LEFT", "SIDE_MIDDLE"
         );
     }
 

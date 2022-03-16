@@ -13,7 +13,56 @@ const MOBILE = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userA
 let weaponImg = new IMG_PROC.Bitmap('../../images/knife_hand.png', 319, 320);
 let skyImg = new IMG_PROC.Bitmap('../../images/deathvalley_panorama.jpg', 2000, 750);
 let wallImg = new IMG_PROC.Bitmap('../../images/wall_texture.jpg', 1024, 1024);
-let otherPlayerImg = new IMG_PROC.Bitmap('../../images/player.png', 400, 700);
+let otherPlayerImageSet = [
+  /** Front facing images */
+  new IMG_PROC.Bitmap('../../images/other_player/op-f-1.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-f-2.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-f-3.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-f-4.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-f-5.png', 400, 700),
+  /** Back facing images */
+  new IMG_PROC.Bitmap('../../images/other_player/op-b-1.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-b-2.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-b-3.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-b-4.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-b-5.png', 400, 700),
+  /** Left facing images */
+  new IMG_PROC.Bitmap('../../images/other_player/op-l-1.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-l-2.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-l-3.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-l-4.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-l-5.png', 400, 700),
+  /** Right facing images */
+  new IMG_PROC.Bitmap('../../images/other_player/op-r-1.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-r-2.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-r-3.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-r-4.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-r-5.png', 400, 700),
+  /** Front-left facing images */
+  new IMG_PROC.Bitmap('../../images/other_player/op-fl-1.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-fl-2.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-fl-3.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-fl-4.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-fl-5.png', 400, 700),
+  /** Front-right facing images */
+  new IMG_PROC.Bitmap('../../images/other_player/op-fr-1.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-fr-2.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-fr-3.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-fr-4.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-fr-5.png', 400, 700),
+  /** Back-left facing images */
+  new IMG_PROC.Bitmap('../../images/other_player/op-bl-1.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-bl-2.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-bl-3.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-bl-4.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-bl-5.png', 400, 700),
+  /** Back-right facing images */
+  new IMG_PROC.Bitmap('../../images/other_player/op-br-1.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-br-2.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-br-3.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-br-4.png', 400, 700),
+  new IMG_PROC.Bitmap('../../images/other_player/op-br-5.png', 400, 700),
+];
 
 
 /** 
@@ -152,6 +201,9 @@ Camera.prototype.drawPlayers = function (player, players, angle, zBuffer) {
   for (let plI = 0; plI < players.length; plI++) {
     otherPlayer = players[plI];
     if (otherPlayer.number !== player.number) {
+      const anim = otherPlayer.animation;
+      const spriteIndex = anim.rowIndex*5 + anim.frameIndex;
+      const otherPlayerImg = otherPlayerImageSet[spriteIndex];
       this.drawSprite(player, otherPlayer, angle, otherPlayerImg, zBuffer);
       this.drawPlayerName(player, otherPlayer, angle);
     }
