@@ -1,4 +1,26 @@
 
+const Animation = require("./animation");
+
+class CharacterAnimation extends Animation {
+    constructor (delay, direction, side) {
+        super(delay);
+        this.direction = direction;
+        this.side = side;
+        this.frame_sets = {
+            "DIR_TOWARDS":    [ 0, 1, 2, 3, 4],
+            "DIR_AWAY":       [ 5, 6, 7, 8, 9],
+            "DIR_LEFT":       [10,11,12,13,14],
+            "DIR_RIGHT":      [15,16,17,18,19],
+            "DIR_TOW_LEFT":   [20,21,22,23,24],
+            "DIR_TOW_RIGHT":  [25,26,27,28,29],
+            "DIR_AWAY_LEFT":  [30,31,32,33,34],
+            "DIR_AWAY_RIGHT": [35,36,37,38,39]
+        };
+        this.frame_set = this.frame_sets[direction];
+    }
+}
+
+
 class Character {
     constructor (name, maxHP, hp, walkSpd, position, height, width) {
         this.name = name;
@@ -8,6 +30,9 @@ class Character {
         this.pos = position;
         this.height = height;
         this.width = width;
+        this.animation = new CharacterAnimation(
+            15, "DIR_TOWARDS", "SIDE_MIDDLE"
+        );
     }
 
     /** Getters */
@@ -35,5 +60,6 @@ class Character {
         if (newPos) { this.pos = newPos; }
     }
 }
+
 
 module.exports = Character;

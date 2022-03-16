@@ -13,7 +13,7 @@ const MOBILE = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userA
 let weaponImg = new IMG_PROC.Bitmap('../../images/knife_hand.png', 319, 320);
 let skyImg = new IMG_PROC.Bitmap('../../images/deathvalley_panorama.jpg', 2000, 750);
 let wallImg = new IMG_PROC.Bitmap('../../images/wall_texture.jpg', 1024, 1024);
-let otherPlayerImg = new IMG_PROC.Bitmap('../../images/other_player/op_d_2.png', 21, 29);
+let otherPlayerImg = new IMG_PROC.Bitmap('../../images/player.png', 400, 700);
 
 
 /** 
