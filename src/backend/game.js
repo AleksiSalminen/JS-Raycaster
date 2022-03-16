@@ -21,7 +21,27 @@ module.exports = {
     let roomName = makeid(5);
     clientRooms[client.id] = roomName;
 
-    state[roomName] = initGame(client.id, params.name);
+    const pl1 = new Player(
+      client.id, 
+      params.name, 
+      1, 
+      playerHealth, 
+      playerHealth,
+      playerSpeed,
+      playerTurnSpeed,
+      {
+        x: 2,
+        y: 2,
+        rotation: 0
+      },
+      0.7, 
+      0.4
+    );
+  
+    state[roomName] = {
+      level: level,
+      players: [pl1]
+    };
 
     client.join(roomName);
     client.number = 1;
@@ -62,22 +82,26 @@ module.exports = {
     client.emit("gameCode", roomName);
     client.number = numClients + 1;
     client.emit("init", numClients + 1);
-    
+
     const playerAmount = state[roomName].players.length;
-    state[roomName].players.push({
-      client: client.id,
-      number: state[roomName].players[playerAmount-1].number + 1,
-      name: params.name,
-      health: playerHealth,
-      height: 0.7,
-      width: 0.4,
-      gotHit: 0,
-      pos: {
+    const newPlayer = new Player(
+      client.id, 
+      params.name, 
+      state[roomName].players[playerAmount-1].number + 1, 
+      playerHealth, 
+      playerHealth,
+      playerSpeed,
+      playerTurnSpeed,
+      {
         x: 2,
         y: 2,
         rotation: 0
-      }
-    });
+      },
+      0.7, 
+      0.4
+    );
+    
+    state[roomName].players.push(newPlayer);
   },
 
   /**
@@ -195,45 +219,6 @@ function makeid(length) {
   return result;
 }
 
-function initGame(clientID, playerName) {
-  /*const pl1 = new Player(
-    playerName, 
-    1, 
-    playerHealth, 
-    playerHealth,
-    playerSpeed,
-    playerTurnSpeed,
-    {
-      x: 2,
-      y: 2,
-      rotation: 0
-    },
-    0.7, 
-    0.4
-  );*/
-
-  return {
-    level: level,
-    players: [
-      {
-        client: clientID,
-        number: 1,
-        name: playerName,
-        health: playerHealth,
-        height: 0.7,
-        width: 0.4,
-        weaponImg: '../../assets/knife_hand.png',
-        gotHit: 0,
-        pos: {
-          x: 2,
-          y: 2,
-          rotation: 0
-        }
-      }
-    ]
-  };
-}
-
 function gameLoop(roomName) {
   if (!state[roomName]) {
     return;
@@ -246,10 +231,6 @@ function gameLoop(roomName) {
 
 }
 
-/**
- * Main game loop
- * @param {*} roomName 
- */
 function startGameInterval(roomName) {
   const intervalId = setInterval(() => {
     gameLoop(roomName);
