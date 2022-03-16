@@ -15,6 +15,12 @@ class Player extends Character {
     getTurnSpd () { return this.turnSpd; }
 
     /** Setters */
+    setClient (newClientID) {
+        if (newClientID && newClientID.length > 0) { this.client = newClientID; }
+    }
+    setNumber (newNumber) {
+        if (newNumber > 0) { this.number = newNumber; }
+    }
     setTurnSpd (newTurnSpd) {
         if (newTurnSpd > 0) { this.turnSpd = newTurnSpd; }
     }
