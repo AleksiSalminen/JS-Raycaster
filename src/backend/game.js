@@ -3,6 +3,7 @@ const { level } = require('./level');
 const config = require("../../def/config/config.json");
 const state = {};
 const clientRooms = {};
+const helpers = require("./helpers");
 
 const FRAME_RATE = config.framerate;
 const maxNumberOfPlayers = config.maxNumberOfPlayers;
@@ -18,7 +19,7 @@ module.exports = {
    * 
    */
   createNewGame(client, params) {
-    let roomName = makeid(5);
+    let roomName = helpers.makeid(5);
     clientRooms[client.id] = roomName;
 
     const pl1 = new Player(
@@ -204,16 +205,6 @@ module.exports = {
 
 };
 
-function makeid(length) {
-  var result = "";
-  var characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  var charactersLength = characters.length;
-  for (var i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
 
 function gameLoop(roomName) {
   if (!state[roomName]) {
