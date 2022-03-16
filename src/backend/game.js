@@ -21,28 +21,6 @@ module.exports = {
     let roomName = makeid(5);
     clientRooms[client.id] = roomName;
 
-    /** Just trying out the player object */
-    /*
-    let pl1 = new Player(
-      "CoolDude", 
-      playerHealth, 
-      playerHealth,
-      playerSpeed,
-      playerTurnSpeed,
-      {
-        x: 2,
-        y: 2,
-        rotation: 0
-      }
-    );
-
-    console.log(pl1.getName());
-    console.log(pl1.getTurnSpd());
-    console.log(pl1.getPosition());
-    console.log(pl1.name);
-    */
-    /** */
-
     state[roomName] = initGame(client.id, params.name);
 
     client.join(roomName);
@@ -218,6 +196,22 @@ function makeid(length) {
 }
 
 function initGame(clientID, playerName) {
+  /*const pl1 = new Player(
+    playerName, 
+    1, 
+    playerHealth, 
+    playerHealth,
+    playerSpeed,
+    playerTurnSpeed,
+    {
+      x: 2,
+      y: 2,
+      rotation: 0
+    },
+    0.7, 
+    0.4
+  );*/
+
   return {
     level: level,
     players: [

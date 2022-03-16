@@ -2,12 +2,16 @@
 const Character = require("./character"); 
 
 class Player extends Character {
-    constructor (name, maxHP, hp, walkSpd, turnSpd, position) {
-        super(name, maxHP, hp, walkSpd, position);
+    constructor (client, name, number, maxHP, hp, walkSpd, turnSpd, position, height, width) {
+        super(name, maxHP, hp, walkSpd, position, height, width);
+        this.client = client;
+        this.number = number;
         this.turnSpd = turnSpd;
     }
 
     /** Getters */
+    getClient () { return this.client; }
+    getNumber () { return this.number; }
     getTurnSpd () { return this.turnSpd; }
 
     /** Setters */
