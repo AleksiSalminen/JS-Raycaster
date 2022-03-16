@@ -1,7 +1,9 @@
 
+const fs = require("fs");
+
 module.exports = {
 
-    makeid(length) {
+    makeid (length) {
         let result = "";
         let characters =
           "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -11,5 +13,9 @@ module.exports = {
         }
         return result;
     },
+
+    getDataFromFile (fileName) {
+      return fs.readFileSync(fileName, "utf8");
+  },
 
 };
