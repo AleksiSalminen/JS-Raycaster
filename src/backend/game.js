@@ -87,9 +87,8 @@ module.exports = {
     clientRooms[client.id] = roomName;
 
     client.join(roomName);
-    client.emit("gameCode", roomName);
     client.number = numClients + 1;
-    client.emit("init", numClients + 1);
+    client.emit("init", numClients + 1, roomName);
 
     const playerAmount = state[roomName].players.length;
     const newPlayer = new Player(
