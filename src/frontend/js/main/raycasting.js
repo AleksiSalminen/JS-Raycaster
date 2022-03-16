@@ -1,5 +1,4 @@
 
-
 function castRay(map, player, players, point, angle, range) {
     let sin = Math.sin(angle);
     let cos = Math.cos(angle);
@@ -45,64 +44,6 @@ function castRay(map, player, players, point, angle, range) {
         y = Math.floor(y);
         if (x < 0 || x > map.size - 1 || y < 0 || y > map.size - 1) return -1;
         return map.walls[y * map.size + x];
-    };
-
-    function getPlayerHit(x, y) {
-        if (players.length - 1 > 0) {
-            for (let plI = 0;plI < players.length;plI++) {
-                const chosenPlayer = players[plI];
-                if (chosenPlayer.number !== player.number) {
-                    const xDiff = Math.floor(chosenPlayer.pos.x) - Math.floor(x);
-                    const yDiff = Math.floor(chosenPlayer.pos.y) - Math.floor(y);
-                    if ((xDiff === -1 || xDiff === 0 || xDiff === 1)
-                     && (yDiff === -1 || yDiff === 0 || yDiff === 1)) {
-                        //return chosenPlayer;
-                        return checkTileForPlayer(chosenPlayer, {x,y});
-                    }
-                }
-            }
-        }
-        
-        return undefined;
-    }
-
-    function checkTileForPlayer (player, rayPos) {
-        const increment = 0.05;
-        const accuracy = player.width/2;
-        const plPos = {
-            x: player.pos.x,
-            y: player.pos.y
-        };
-        let rayOutsideBounds = false;
-        let plRay = {
-            x: rayPos.x,
-            y: rayPos.y,
-            distance: 0
-        };
-        
-        while (!rayOutsideBounds) {
-            // Check if ray is very close to the player
-            if (Math.abs(plRay.x - plPos.x) <= accuracy
-             && Math.abs(plRay.y - plPos.y) <= accuracy) {
-                plRay.player = player;
-                return plRay;
-            }
-
-            // Update the ray
-            plRay.x += cos * increment;
-            plRay.y += sin * increment;
-            plRay.distance += increment;
-
-            let x = Math.floor(plRay.x);
-            let y = Math.floor(plRay.y);
-            // If ray went outside given bounds
-            if (x < plPos.x-1 || x > plPos.x+1
-             || y < plPos.y-1 || y > plPos.y+1) {
-                rayOutsideBounds = true;
-            }
-        }
-
-        return undefined;
     }
 };
 
