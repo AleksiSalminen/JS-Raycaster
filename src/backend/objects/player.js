@@ -9,6 +9,11 @@ class Player extends Character {
 
     /** Getters */
     getTurnSpd () { return this.turnSpd; }
+
+    /** Setters */
+    setTurnSpd (newTurnSpd) {
+        if (newTurnSpd > 0) { this.turnSpd = newTurnSpd; }
+    }
 }
 
 module.exports = Player;

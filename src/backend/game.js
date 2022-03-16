@@ -3,13 +3,14 @@ const { level } = require('./level');
 const config = require("../../def/config/config.json");
 const state = {};
 const clientRooms = {};
-const Player = require("./objects/player");
 
 const FRAME_RATE = config.framerate;
 const maxNumberOfPlayers = config.maxNumberOfPlayers;
 const playerHealth = config.playerMaxHealth;
 const playerSpeed = config.playerWalkSpeed;
 const playerTurnSpeed = Math.PI * config.playerTurnSpeed;
+
+const Player = require("./objects/player");
 
 module.exports = {
 
