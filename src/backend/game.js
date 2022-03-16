@@ -137,35 +137,31 @@ module.exports = {
     let stateCurrent = state[roomName];
     for (let i = 0; i < stateCurrent.players.length; i++) {
       let character = stateCurrent.players[i];
-      if (character.number === params.number) {
-        let newPlayerPos = {
-          x: character.pos.x,
-          y: character.pos.y,
-          rotation: character.pos.rotation
-        }
+      if (character.getNumber() === params.number) {
+        let newPlayerPos = JSON.parse(JSON.stringify(character.getPosition()));
 
         if (params.dir === "Forward") {
-          newPlayerPos.x = character.pos.x + Math.sin(character.pos.rotation + Math.PI / 2) * playerSpeed;
-          newPlayerPos.y = character.pos.y - Math.cos(character.pos.rotation + Math.PI / 2) * playerSpeed;
+          newPlayerPos.x = newPlayerPos.x + Math.sin(newPlayerPos.rotation + Math.PI / 2) * playerSpeed;
+          newPlayerPos.y = newPlayerPos.y - Math.cos(newPlayerPos.rotation + Math.PI / 2) * playerSpeed;
         }
         else if (params.dir === "Back") {
-          newPlayerPos.x = character.pos.x + Math.sin(character.pos.rotation - Math.PI / 2) * (playerSpeed/2);
-          newPlayerPos.y = character.pos.y - Math.cos(character.pos.rotation - Math.PI / 2) * (playerSpeed/2);
+          newPlayerPos.x = newPlayerPos.x + Math.sin(newPlayerPos.rotation - Math.PI / 2) * (playerSpeed/2);
+          newPlayerPos.y = newPlayerPos.y - Math.cos(newPlayerPos.rotation - Math.PI / 2) * (playerSpeed/2);
         }
         else if (params.dir === "Left") {
-          newPlayerPos.x = character.pos.x + Math.sin(character.pos.rotation) * (playerSpeed/2);
-          newPlayerPos.y = character.pos.y - Math.cos(character.pos.rotation) * (playerSpeed/2);
+          newPlayerPos.x = newPlayerPos.x + Math.sin(character.pos.rotation) * (playerSpeed/2);
+          newPlayerPos.y = newPlayerPos.y - Math.cos(character.pos.rotation) * (playerSpeed/2);
         }
         else if (params.dir === "Right") {
-          newPlayerPos.x = character.pos.x - Math.sin(character.pos.rotation) * (playerSpeed/2);
-          newPlayerPos.y = character.pos.y + Math.cos(character.pos.rotation) * (playerSpeed/2);
+          newPlayerPos.x = newPlayerPos.x - Math.sin(character.pos.rotation) * (playerSpeed/2);
+          newPlayerPos.y = newPlayerPos.y + Math.cos(character.pos.rotation) * (playerSpeed/2);
         }
         else if (params.dir === "RotLeft") {
           if (params.movementX) {
-            newPlayerPos.rotation = character.pos.rotation + params.movementX/150;
+            newPlayerPos.rotation = newPlayerPos.rotation + params.movementX/150;
           }
           else {
-            newPlayerPos.rotation = character.pos.rotation - playerTurnSpeed;
+            newPlayerPos.rotation = newPlayerPos.rotation - playerTurnSpeed;
           }
 
           if (newPlayerPos.rotation < 0) {
@@ -177,10 +173,10 @@ module.exports = {
         }
         else if (params.dir === "RotRight") {
           if (params.movementX) {
-            newPlayerPos.rotation = character.pos.rotation + params.movementX/150;
+            newPlayerPos.rotation = newPlayerPos.rotation + params.movementX/150;
           }
           else {
-            newPlayerPos.rotation = character.pos.rotation + playerTurnSpeed;
+            newPlayerPos.rotation = newPlayerPos.rotation + playerTurnSpeed;
           }
 
           if (newPlayerPos.rotation < 0) {
@@ -198,7 +194,7 @@ module.exports = {
         }
 
         if (!hitWall) {
-          state[roomName].players[i].pos = newPlayerPos;
+          state[roomName].players[i].setPosition(newPlayerPos);
         }
         i = stateCurrent.players.length;
       }
