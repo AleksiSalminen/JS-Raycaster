@@ -2,23 +2,8 @@
 const Animation = require("./animation");
 
 class CharacterAnimation extends Animation {
-    constructor (delay, direction, side) {
+    constructor (delay) {
         super(delay);
-        this.direction = direction;
-        this.side = side;
-        this.frameSets = {
-            "DIR_TOWARDS":    [ 0, 1, 2, 3, 4],
-            "DIR_AWAY":       [ 5, 6, 7, 8, 9],
-            "DIR_LEFT":       [10,11,12,13,14],
-            "DIR_RIGHT":      [15,16,17,18,19],
-            "DIR_TOW_LEFT":   [20,21,22,23,24],
-            "DIR_TOW_RIGHT":  [25,26,27,28,29],
-            "DIR_AWAY_LEFT":  [30,31,32,33,34],
-            "DIR_AWAY_RIGHT": [35,36,37,38,39]
-        };
-        this.frameSet = this.frameSets[direction];
-        let spriteIndex = this.frameSet[this.frameIndex];
-        this.rowIndex = Math.floor(spriteIndex/5);
     }
 
     update() {
@@ -62,9 +47,8 @@ class Character {
         this.pos = position;
         this.height = height;
         this.width = width;
-        this.animation = new CharacterAnimation(
-            5, "DIR_LEFT", "SIDE_MIDDLE"
-        );
+        const animationDelay = 5;
+        this.animation = new CharacterAnimation(animationDelay);
     }
 
     /** Getters */
