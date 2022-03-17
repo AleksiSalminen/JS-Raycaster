@@ -11,6 +11,9 @@ function updateGraphics(player, players, level) {
   if (titleScreen.style.display !== "none") {
     titleScreen.style.display = "none";
   }
+  if (gameDisplay.style.display === "none") {
+    gameDisplay.style.display = "block";
+  }
   
   // Empty the canvas
   gameDisplay.getContext('2d').clearRect(0, 0, gameDisplay.width, gameDisplay.height);
