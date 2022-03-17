@@ -11,7 +11,6 @@ const playerSpeed = config.playerWalkSpeed;
 const playerTurnSpeed = Math.PI * config.playerTurnSpeed;
 
 const Player = require("./objects/player");
-const Level = require('./objects/level');
 
 const levels = helpers.createLevels();
 
