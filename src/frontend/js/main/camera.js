@@ -13,7 +13,7 @@ const MOBILE = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userA
 
 let weaponImg;
 let skyImg;
-let wallImg;
+let wallImages = [];
 let otherPlayerImageSet = [
   /** Front facing images */
   new IMG_PROC.Bitmap('../../images/other_player/op-f-1.png', 400, 700),
@@ -194,9 +194,19 @@ Camera.prototype.drawWeapon = function (imgName) {
 Camera.prototype.drawColumns = function (player, players, level) {
   this.ctx.save();
 
-  if (wallImg === undefined) {
-    const imgName = level.wallTextures[0].texture;
-    wallImg = new IMG_PROC.Bitmap('../../images/' + imgName, 1024, 1024);
+  if (wallImages.length === 0) {
+    let imgID;
+    let imgName;
+    let texture;
+    for (let imgI = 0;imgI < level.wallTextures.length;imgI++) {
+      imgID = level.wallTextures[imgI].id;
+      imgName = level.wallTextures[imgI].texture;
+      texture = new IMG_PROC.Bitmap('../../images/' + imgName, 1024, 1024);
+      wallImages.push({
+        id: imgID,
+        texture: texture
+      });
+    }
   }
 
   let zBuffer = [];
@@ -222,6 +232,8 @@ Camera.prototype.drawColumn = function (column, ray, angle, level, player, playe
     let step = ray[s];
 
     if (s === hit) {
+      let wallImg = this.getWallImg(step.wall).texture;
+
       let textureX = Math.floor(wallImg.width * step.offset);
       let wallProj = this.wallProject(step.height, angle, step.distance);
       
@@ -237,6 +249,35 @@ Camera.prototype.drawColumn = function (column, ray, angle, level, player, playe
     }
   }
 };
+
+Camera.prototype.getWallImg = function (wallID) {
+  let wallImg;
+
+  if (wallID === 0) {
+    return wallImages[0];
+  }
+
+  let texture;
+  let txID;
+  for (let imgI = 0;imgI < wallImages.length;imgI++) {
+    texture = wallImages[imgI];
+    txID = texture.id;
+
+    if (txID[0] === "0") {
+      txID = parseInt(txID[1]);
+    }
+    else {
+      txID = parseInt(txID[0] + txID[1]);
+    }
+
+    if (txID === wallID) {
+      wallImg = texture;
+      imgI = wallImages.length;
+    }
+  }
+
+  return wallImg;
+}
 
 Camera.prototype.wallProject = function (height, angle, distance) {
   let z = distance * Math.cos(angle);
