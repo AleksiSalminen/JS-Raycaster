@@ -16,7 +16,7 @@ let favicon = require("serve-favicon");
 
 /* Express-paths */
 
-app.use(favicon(path.join(__dirname, "../" + config.favicon)));
+app.use(favicon(path.join(__dirname, "../" + config.system.favicon)));
 app.use("/", express.static(path.join(__dirname, "frontend")));
 
 app.get("/", (req, res) => {
@@ -26,8 +26,8 @@ app.get("/", (req, res) => {
 
 /* Start the application */
 
-const ip = config.ip;
-const port = config.port;
+const ip = config.system.ip;
+const port = config.system.port;
 
 server.listen(port, ip, () => {
   console.log("App listening on " + ip + ":" + port);

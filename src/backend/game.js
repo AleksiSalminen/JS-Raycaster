@@ -1,15 +1,12 @@
 const { io } = require('./handler');
 const config = require("../../def/config/config.json");
-const state = {};
-const clientRooms = {};
 const helpers = require("./helpers");
-
-const FRAME_RATE = config.framerate;
-const maxNumberOfPlayers = config.maxNumberOfPlayers;
-
 const Player = require("./objects/player");
 
-const levels = helpers.createLevels();
+let state = {};
+let clientRooms = {};
+
+const LEVELS = helpers.createLevels();
 
 
 module.exports = {
@@ -21,7 +18,7 @@ module.exports = {
     let roomName = helpers.makeid(5);
     clientRooms[client.id] = roomName;
 
-    const level1 = levels[0];
+    const level1 = LEVELS[0];
 
     const pl1 = new Player(
       client.id, 
@@ -73,7 +70,7 @@ module.exports = {
     if (numClients === 0) {
       client.emit("unknownCode");
       return;
-    } else if (numClients > maxNumberOfPlayers - 1) {
+    } else if (numClients > config.system.maxNumberOfPlayers - 1) {
       client.emit("tooManyPlayers");
       return;
     }
@@ -234,7 +231,7 @@ function startGameInterval(roomName) {
   const intervalId = setInterval(() => {
     gameLoop(roomName);
     emitGameState(roomName, state[roomName]);
-  }, 1000 / FRAME_RATE);
+  }, 1000 / config.system.framerate);
 }
 
 function emitGameState(room, gameState) {
