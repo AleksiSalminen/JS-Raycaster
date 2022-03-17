@@ -14,22 +14,23 @@ function parseLevelInfo(data) {
     for (let i = 0; i < data.length; i++) {
         let line = data[i];
         if (line == "Name:") {
-            i++;
-            info.name = data[i]
+            i++; info.name = data[i]
         }
         else if (line == "Light:") {
-            i++;
-            info.light = parseInt(data[i]);
+            i++; info.light = parseInt(data[i]);
         }
         else if (line == "Skybox:") {
-            i++;
-            info.skybox = data[i]
+            i++; info.skybox = data[i]
+        }
+        else if (line == "PlayerSpawn:") {
+            info.playerSpawn = {};
+            i++; info.playerSpawn.x = parseInt(data[i]);
+            i++; info.playerSpawn.y = parseInt(data[i]);
         }
         else if (line == "WallTextures:") {
             let wallTextures = [];
             while (data[i + 1] !== "WallGrid:") {
-                i++;
-                wallTextures.push({
+                i++; wallTextures.push({
                     id: data[i].slice(0, 2),
                     texture: data[i].slice(4, data[i].length)
                 });
@@ -39,8 +40,7 @@ function parseLevelInfo(data) {
         else if (line == "WallGrid:") {
             let walls = [];
             while (i < data.length - 1) {
-                i++;
-                walls.push(data[i]);
+                i++; walls.push(data[i]);
             }
             info.walls = walls;
         }
@@ -78,6 +78,7 @@ class Level {
         this.name = levelInfo.name;
         this.light = levelInfo.light;
         this.skybox = levelInfo.skybox;
+        this.playerSpawn = levelInfo.playerSpawn;
         this.wallTextures = levelInfo.wallTextures;
         this.walls = levelInfo.walls;
         this.width = levelInfo.width;

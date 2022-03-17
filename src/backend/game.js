@@ -24,19 +24,19 @@ module.exports = {
     let roomName = helpers.makeid(5);
     clientRooms[client.id] = roomName;
 
-    const level1 = levels[0];
+    const level1 = levels[1];
 
     const pl1 = new Player(
       client.id, 
       params.name, 
       1, 
       playerHealth, 
-      playerHealth,
-      playerSpeed,
-      playerTurnSpeed,
+      playerHealth, 
+      playerSpeed, 
+      playerTurnSpeed, 
       {
-        x: 2,
-        y: 2,
+        x: level1.playerSpawn.x,
+        y: level1.playerSpawn.y,
         rotation: 0
       },
       0.7, 
