@@ -7,5 +7,9 @@
     "maxNumberOfPlayers": 4,
     "playerMaxHealth": 100,
     "playerWalkSpeed": 0.04,
-    "playerTurnSpeed": 0.04
+    "playerTurnSpeed": 0.04,
+    "levels": [
+        "test-level",
+        "test-level2"
+    ]
 }

@@ -13,6 +13,8 @@ const playerTurnSpeed = Math.PI * config.playerTurnSpeed;
 const Player = require("./objects/player");
 const Level = require('./objects/level');
 
+const levels = helpers.createLevels();
+
 
 module.exports = {
 
@@ -23,11 +25,7 @@ module.exports = {
     let roomName = helpers.makeid(5);
     clientRooms[client.id] = roomName;
 
-    const level1 = new Level(
-      "test-level.lvl", 
-      {}, 
-      {}
-    );
+    const level1 = levels[0];
 
     const pl1 = new Player(
       client.id, 
