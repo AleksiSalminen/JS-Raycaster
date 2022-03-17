@@ -11,9 +11,9 @@ import { ANIMATION } from './animation.js';
 const CIRCLE = Math.PI * 2;
 const MOBILE = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
 
-let weaponImg = new IMG_PROC.Bitmap('../../images/knife_hand.png', 319, 320);
-let skyImg = new IMG_PROC.Bitmap('../../images/deathvalley_panorama.jpg', 2000, 750);
-let wallImg = new IMG_PROC.Bitmap('../../images/wall_texture.jpg', 1024, 1024);
+let weaponImg;
+let skyImg;
+let wallImg;
 let otherPlayerImageSet = [
   /** Front facing images */
   new IMG_PROC.Bitmap('../../images/other_player/op-f-1.png', 400, 700),
@@ -97,15 +97,19 @@ function Camera(canvas, resolution, focalLength) {
 /** The main rendering method */
 
 Camera.prototype.render = function (player, players, level) {
-  this.drawSky(player.pos.rotation, level.light);
+  this.drawSky(player.pos.rotation, level);
   this.drawColumns(player, players, level);
-  this.drawWeapon();
+  this.drawWeapon(player.weaponImg);
   this.drawMiniMap(player, players, level);
 };
 
 /** Draw sky */
 
-Camera.prototype.drawSky = function (direction, ambient) {
+Camera.prototype.drawSky = function (direction, level) {
+  if (skyImg === undefined) {
+    skyImg = new IMG_PROC.Bitmap('../../images/' + level.skybox, 2000, 750);
+  }
+  
   let width = skyImg.width * (this.height / skyImg.height) * 2;
   let left = (direction / CIRCLE) * -width;
 
@@ -114,9 +118,9 @@ Camera.prototype.drawSky = function (direction, ambient) {
   if (left < width - this.width) {
     this.ctx.drawImage(skyImg.image, left + width, 0, width, this.height);
   }
-  if (ambient > 0) {
+  if (level.light > 0) {
     this.ctx.fillStyle = '#ffffff';
-    this.ctx.globalAlpha = ambient * 0.1;
+    this.ctx.globalAlpha = level.light * 0.1;
     this.ctx.fillRect(0, this.height * 0.5, this.width, this.height * 0.5);
   }
   this.ctx.restore();
@@ -175,7 +179,11 @@ Camera.prototype.drawMiniMap = function (player, players, level) {
 
 /** Draw weapon */
 
-Camera.prototype.drawWeapon = function () {
+Camera.prototype.drawWeapon = function (imgName) {
+  if (weaponImg === undefined) {
+    weaponImg = new IMG_PROC.Bitmap('../../images/' + imgName, 319, 320);
+  }
+
   let left = this.width * 0.66;
   let top = this.height * 0.6;
   this.ctx.drawImage(weaponImg.image, left, top, weaponImg.width * this.scale, weaponImg.height * this.scale);
@@ -185,6 +193,12 @@ Camera.prototype.drawWeapon = function () {
 
 Camera.prototype.drawColumns = function (player, players, level) {
   this.ctx.save();
+
+  if (wallImg === undefined) {
+    const imgName = level.wallTextures[0].texture;
+    wallImg = new IMG_PROC.Bitmap('../../images/' + imgName, 1024, 1024);
+  }
+
   let zBuffer = [];
   for (let column = 0; column < this.resolution; column++) {
     let x = column / this.resolution - 0.5;

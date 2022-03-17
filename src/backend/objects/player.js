@@ -7,6 +7,7 @@ class Player extends Character {
         this.client = client;
         this.number = number;
         this.turnSpd = turnSpd;
+        this.weaponImg = "knife_hand.png";
     }
 
     /** Getters */
