@@ -11,58 +11,64 @@ import { ANIMATION } from './animation.js';
 const CIRCLE = Math.PI * 2;
 const MOBILE = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
 
+const uiImagePath = '../../images/ui/';
+const skyboxImagePath = '../../images/skyboxes/';
+const wallImagePath = '../../images/walls/';
+const otherPlayerImagePath = '../../images/other_player/';
+const fpsImagePath = '../../images/fps/';
+
 let weaponImg;
 let skyImg;
 let wallImages = [];
 let otherPlayerImageSet = [
   /** Front facing images */
-  new IMG_PROC.Bitmap('../../images/other_player/op-f-1.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-f-2.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-f-3.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-f-4.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-f-5.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-f-1.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-f-2.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-f-3.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-f-4.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-f-5.png', 400, 700),
   /** Back facing images */
-  new IMG_PROC.Bitmap('../../images/other_player/op-b-1.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-b-2.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-b-3.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-b-4.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-b-5.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-b-1.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-b-2.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-b-3.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-b-4.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-b-5.png', 400, 700),
   /** Left facing images */
-  new IMG_PROC.Bitmap('../../images/other_player/op-l-1.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-l-2.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-l-3.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-l-4.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-l-5.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-l-1.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-l-2.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-l-3.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-l-4.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-l-5.png', 400, 700),
   /** Right facing images */
-  new IMG_PROC.Bitmap('../../images/other_player/op-r-1.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-r-2.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-r-3.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-r-4.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-r-5.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-r-1.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-r-2.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-r-3.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-r-4.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-r-5.png', 400, 700),
   /** Front-left facing images */
-  new IMG_PROC.Bitmap('../../images/other_player/op-fl-1.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-fl-2.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-fl-3.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-fl-4.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-fl-5.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-fl-1.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-fl-2.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-fl-3.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-fl-4.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-fl-5.png', 400, 700),
   /** Front-right facing images */
-  new IMG_PROC.Bitmap('../../images/other_player/op-fr-1.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-fr-2.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-fr-3.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-fr-4.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-fr-5.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-fr-1.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-fr-2.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-fr-3.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-fr-4.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-fr-5.png', 400, 700),
   /** Back-left facing images */
-  new IMG_PROC.Bitmap('../../images/other_player/op-bl-1.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-bl-2.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-bl-3.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-bl-4.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-bl-5.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-bl-1.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-bl-2.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-bl-3.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-bl-4.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-bl-5.png', 400, 700),
   /** Back-right facing images */
-  new IMG_PROC.Bitmap('../../images/other_player/op-br-1.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-br-2.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-br-3.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-br-4.png', 400, 700),
-  new IMG_PROC.Bitmap('../../images/other_player/op-br-5.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-br-1.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-br-2.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-br-3.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-br-4.png', 400, 700),
+  new IMG_PROC.Bitmap(otherPlayerImagePath + 'op-br-5.png', 400, 700),
 ];
 
 
@@ -107,7 +113,7 @@ Camera.prototype.render = function (player, players, level) {
 
 Camera.prototype.drawSky = function (direction, level) {
   if (skyImg === undefined) {
-    skyImg = new IMG_PROC.Bitmap('../../images/' + level.skybox, 2000, 750);
+    skyImg = new IMG_PROC.Bitmap(skyboxImagePath + level.skybox, 2000, 750);
   }
   
   let width = skyImg.width * (this.height / skyImg.height) * 2;
@@ -181,7 +187,7 @@ Camera.prototype.drawMiniMap = function (player, players, level) {
 
 Camera.prototype.drawWeapon = function (imgName) {
   if (weaponImg === undefined) {
-    weaponImg = new IMG_PROC.Bitmap('../../images/' + imgName, 319, 320);
+    weaponImg = new IMG_PROC.Bitmap(fpsImagePath + imgName, 319, 320);
   }
 
   let left = this.width * 0.66;
@@ -201,7 +207,7 @@ Camera.prototype.drawColumns = function (player, players, level) {
     for (let imgI = 0;imgI < level.wallTextures.length;imgI++) {
       imgID = level.wallTextures[imgI].id;
       imgName = level.wallTextures[imgI].texture;
-      texture = new IMG_PROC.Bitmap('../../images/' + imgName, 1024, 1024);
+      texture = new IMG_PROC.Bitmap(wallImagePath + imgName, 1024, 1024);
       wallImages.push({
         id: imgID,
         texture: texture
