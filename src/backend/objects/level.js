@@ -15,7 +15,8 @@ class Level {
         this.skybox = levelInfo.skybox;
         this.wallTextures = levelInfo.wallTextures;
         this.walls = levelInfo.walls;
-        this.size = levelInfo.size;
+        this.width = levelInfo.width;
+        this.height = levelInfo.height;
     }
     
 

@@ -135,8 +135,8 @@ Camera.prototype.drawMiniMap = function (player, players, level) {
   let startY = 0;
   let width = 50;
   let height = 50;
-  let stepX = width / level.size;
-  let stepY = height / level.size;
+  let stepX = width / level.width;
+  let stepY = height / level.height;
 
   ctx.globalAlpha = 1;
   ctx.fillStyle = "#000000"
@@ -144,9 +144,9 @@ Camera.prototype.drawMiniMap = function (player, players, level) {
   ctx.fillStyle = "#808080";
 
   /** Draw walls */
-  for (let i = 0;i < level.size;i++) {
-    for (let j = 0;j < level.size;j++) {
-      let wall = level.walls[j*level.size + i];
+  for (let i = 0;i < level.width;i++) {
+    for (let j = 0;j < level.height;j++) {
+      let wall = level.walls[j*level.width + i];
       if (wall !== 0) {
         ctx.fillRect(i*stepX, j*stepY, stepX, stepY);
       }

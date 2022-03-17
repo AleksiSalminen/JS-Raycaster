@@ -61,7 +61,8 @@ module.exports = {
       }
     }
 
-    info.size = info.walls[0].length/2;
+    info.width = info.walls[0].length/2;
+    info.height = info.walls.length;
 
     let formattedWalls = [];
     for (let k = 0; k < info.walls.length; k++) {

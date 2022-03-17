@@ -48,8 +48,8 @@ function castRay(map, player, players, point, angle, range) {
     function getMapTile(x, y) {
         x = Math.floor(x);
         y = Math.floor(y);
-        if (x < 0 || x > map.size - 1 || y < 0 || y > map.size - 1) return -1;
-        return map.walls[y * map.size + x];
+        if (x < 0 || x > map.width - 1 || y < 0 || y > map.height - 1) return -1;
+        return map.walls[y * map.width + x];
     }
 };
 
