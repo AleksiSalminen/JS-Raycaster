@@ -17,30 +17,48 @@ function getSpriteRowIndex(playerPos, otherPlayerPos) {
     const segmentAngle = 2 * Math.PI / 8;
     const p1Rot = playerPos.rotation;
     const p2Rot = otherPlayerPos.rotation;
-    const rotDiff = p2Rot - p1Rot + segmentAngle/2;
+
+    let rotDiff;
+    if (p2Rot >= p1Rot) {
+        rotDiff = p2Rot - p1Rot + segmentAngle/2;
+    }
+    else {
+        rotDiff = p2Rot + (2*Math.PI-p1Rot) + segmentAngle/2;
+    }
+    if (rotDiff > 2*Math.PI) {
+        rotDiff -= 2*Math.PI;
+    }
 
     if (rotDiff < segmentAngle || rotDiff >= segmentAngle*8) {
+        /** Back */
         rowIndex = 1;
     }
     else if (rotDiff >= segmentAngle && rotDiff < segmentAngle*2) {
+        /** Back-right */
         rowIndex = 7;
     }
     else if (rotDiff >= segmentAngle*2 && rotDiff < segmentAngle*3) {
+        /** Right */
         rowIndex = 3;
     }
     else if (rotDiff >= segmentAngle*3 && rotDiff < segmentAngle*4) {
+        /** Front-right */
         rowIndex = 5;
     }
     else if (rotDiff >= segmentAngle*4 && rotDiff < segmentAngle*5) {
+        /** Front */
         rowIndex = 0;
     }
     else if (rotDiff >= segmentAngle*5 && rotDiff < segmentAngle*6) {
+        /** Front-left */
         rowIndex = 4;
     }
     else if (rotDiff >= segmentAngle*6 && rotDiff < segmentAngle*7) {
+        /** Left */
         rowIndex = 2;
     }
     else if (rotDiff >= segmentAngle*7 && rotDiff < segmentAngle*8) {
+        /** Back-left */
         rowIndex = 6;
     }
 
