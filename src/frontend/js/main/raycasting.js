@@ -1,5 +1,5 @@
 
-function castRay(map, player, players, point, angle, range) {
+function castRay(level, point, angle, range) {
     let sin = Math.sin(angle);
     let cos = Math.cos(angle);
     let noWall = { length2: Infinity };
@@ -31,7 +31,7 @@ function castRay(map, player, players, point, angle, range) {
     function inspect(step, shiftX, shiftY, distance, offset) {
         let dx = cos < 0 ? shiftX : 0;
         let dy = sin < 0 ? shiftY : 0;
-        step.wall = getMapTile(step.x - dx, step.y - dy);
+        step.wall = getLevelTile(step.x - dx, step.y - dy);
         if (step.wall === 0) {
             step.height = 0;
         }
@@ -45,11 +45,11 @@ function castRay(map, player, players, point, angle, range) {
         return step;
     }
 
-    function getMapTile(x, y) {
+    function getLevelTile(x, y) {
         x = Math.floor(x);
         y = Math.floor(y);
-        if (x < 0 || x > map.width - 1 || y < 0 || y > map.height - 1) return -1;
-        return map.walls[y * map.width + x];
+        if (x < 0 || x > level.width - 1 || y < 0 || y > level.height - 1) return -1;
+        return level.walls[y * level.width + x];
     }
 };
 

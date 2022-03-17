@@ -219,7 +219,7 @@ Camera.prototype.drawColumns = function (player, players, level) {
   for (let column = 0; column < this.resolution; column++) {
     let x = column / this.resolution - 0.5;
     let angle = Math.atan2(x, this.focalLength);
-    let ray = RAYCASTING.castRay(level, player, players, player.pos, player.pos.rotation + angle, this.range);
+    let ray = RAYCASTING.castRay(level, player.pos, player.pos.rotation + angle, this.range);
     this.drawColumn(column, ray, angle, level, player, players, zBuffer);
   }
   this.drawPlayers(player, players, player.pos.rotation, zBuffer);
