@@ -20,6 +20,36 @@ class CharacterAnimation extends Animation {
         let spriteIndex = this.frameSet[this.frameIndex];
         this.rowIndex = Math.floor(spriteIndex/5);
     }
+
+    update() {
+        this.count++;
+        if (this.count === this.delay) {
+            this.step++;
+            if (this.step > 6) {
+                this.step = 1;
+            }
+
+            if (this.step === 1 || this.step === 3) {
+                this.frameIndex = 2;
+            }
+            else if (this.step === 2) {
+                this.frameIndex = 1;
+            }
+            else if (this.step === 4 || this.step === 6) {
+                this.frameIndex = 4;
+            }
+            else if (this.step === 5) {
+                this.frameIndex = 3;
+            }
+            this.count = 0;
+        }
+    }
+
+    reset() {
+        this.count = 0;
+        this.frameIndex = 0;
+        this.step = 1;
+    }
 }
 
 
@@ -33,7 +63,7 @@ class Character {
         this.height = height;
         this.width = width;
         this.animation = new CharacterAnimation(
-            15, "DIR_LEFT", "SIDE_MIDDLE"
+            5, "DIR_LEFT", "SIDE_MIDDLE"
         );
     }
 

@@ -146,6 +146,7 @@ module.exports = {
       let character = stateCurrent.players[i];
       if (character.getNumber() === params.number) {
         let newPlayerPos = JSON.parse(JSON.stringify(character.getPosition()));
+        let rotated = false;
 
         if (params.dir === "Forward") {
           newPlayerPos.x = newPlayerPos.x + Math.sin(newPlayerPos.rotation + Math.PI / 2) * playerSpeed;
@@ -177,6 +178,7 @@ module.exports = {
           else if (newPlayerPos.rotation > 2 * Math.PI) {
             newPlayerPos.rotation -= 2 * Math.PI;
           }
+          rotated = true;
         }
         else if (params.dir === "RotRight") {
           if (params.movementX) {
@@ -192,6 +194,7 @@ module.exports = {
           else if (newPlayerPos.rotation > 2 * Math.PI) {
             newPlayerPos.rotation -= 2 * Math.PI;
           }
+          rotated = true;
         }
 
         let hitWall = false;
@@ -201,6 +204,9 @@ module.exports = {
         }
 
         if (!hitWall) {
+          if (!rotated) {
+            character.moving = true;
+          }
           state[roomName].players[i].setPosition(newPlayerPos);
         }
         i = stateCurrent.players.length;
@@ -219,9 +225,14 @@ function gameLoop(roomName) {
 
   for (h = 0;h < state[roomName].players.length;h++) {
     let player = state[roomName].players[h];
-
+    if (player.moving) {
+      player.animation.update();
+    }
+    else {
+      player.animation.reset();
+    }
+    player.moving = false;
   }
-
 }
 
 function startGameInterval(roomName) {
