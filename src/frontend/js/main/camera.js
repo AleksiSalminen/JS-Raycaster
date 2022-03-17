@@ -1,6 +1,7 @@
 
 import { RAYCASTING } from './raycasting.js';
 import { IMG_PROC } from './img_process.js';
+import { ANIMATION } from './animation.js';
 
 
 /**
@@ -198,12 +199,13 @@ Camera.prototype.drawPlayers = function (player, players, angle, zBuffer) {
     return b.dist - a.dist
   });
 
+  let rowIndex;
+  let otherPlayerImg;
   for (let plI = 0; plI < players.length; plI++) {
     otherPlayer = players[plI];
     if (otherPlayer.number !== player.number) {
-      const anim = otherPlayer.animation;
-      const spriteIndex = anim.rowIndex*5 + anim.frameIndex;
-      const otherPlayerImg = otherPlayerImageSet[spriteIndex];
+      rowIndex = ANIMATION.getSpriteRowIndex(player.pos, otherPlayer.pos);
+      otherPlayerImg = otherPlayerImageSet[rowIndex*5 + otherPlayer.animation.frameIndex];
       this.drawSprite(player, otherPlayer, angle, otherPlayerImg, zBuffer);
       this.drawPlayerName(player, otherPlayer, angle);
     }
