@@ -6,9 +6,6 @@ const helpers = require("./helpers");
 
 const FRAME_RATE = config.framerate;
 const maxNumberOfPlayers = config.maxNumberOfPlayers;
-const playerHealth = config.playerMaxHealth;
-const playerSpeed = config.playerWalkSpeed;
-const playerTurnSpeed = Math.PI * config.playerTurnSpeed;
 
 const Player = require("./objects/player");
 
@@ -24,23 +21,23 @@ module.exports = {
     let roomName = helpers.makeid(5);
     clientRooms[client.id] = roomName;
 
-    const level1 = levels[1];
+    const level1 = levels[0];
 
     const pl1 = new Player(
       client.id, 
       params.name, 
       1, 
-      playerHealth, 
-      playerHealth, 
-      playerSpeed, 
-      playerTurnSpeed, 
+      config.players.maxHealth, 
+      config.players.maxHealth, 
+      config.players.walkSpeed, 
+      config.players.turnSpeed, 
       {
         x: level1.playerSpawn.x,
         y: level1.playerSpawn.y,
         rotation: 0
       },
-      0.7, 
-      0.4
+      config.players.height, 
+      config.players.width
     );
   
     state[roomName] = {
@@ -92,17 +89,17 @@ module.exports = {
       client.id, 
       params.name, 
       state[roomName].players[playerAmount-1].number + 1, 
-      playerHealth, 
-      playerHealth,
-      playerSpeed,
-      playerTurnSpeed,
+      config.players.maxHealth, 
+      config.players.maxHealth, 
+      config.players.walkSpeed, 
+      config.players.turnSpeed, 
       {
-        x: 2,
-        y: 2,
+        x: state[roomName].level.playerSpawn.x,
+        y: state[roomName].level.playerSpawn.y,
         rotation: 0
       },
-      0.7, 
-      0.4
+      config.players.height, 
+      config.players.width
     );
     
     state[roomName].players.push(newPlayer);
@@ -145,6 +142,7 @@ module.exports = {
         let newPlayerPos = JSON.parse(JSON.stringify(character.getPosition()));
         let rotated = false;
 
+        const playerSpeed = config.players.walkSpeed;
         if (params.dir === "Forward") {
           newPlayerPos.x = newPlayerPos.x + Math.sin(newPlayerPos.rotation + Math.PI / 2) * playerSpeed;
           newPlayerPos.y = newPlayerPos.y - Math.cos(newPlayerPos.rotation + Math.PI / 2) * playerSpeed;

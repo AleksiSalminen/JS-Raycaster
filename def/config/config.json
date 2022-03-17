@@ -5,9 +5,13 @@
     "port": 3000,
     "framerate": 30,
     "maxNumberOfPlayers": 4,
-    "playerMaxHealth": 100,
-    "playerWalkSpeed": 0.04,
-    "playerTurnSpeed": 0.04,
+    "players": {
+        "maxHealth": 100,
+        "walkSpeed": 0.04,
+        "turnSpeed": 0.04,
+        "height": 0.7,
+        "width": 0.4
+    },
     "levels": [
         "test-level",
         "test-level2"
