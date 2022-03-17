@@ -100,6 +100,7 @@ Camera.prototype.render = function (player, players, level) {
   this.drawSky(player.pos.rotation, level.light);
   this.drawColumns(player, players, level);
   this.drawWeapon();
+  this.drawMiniMap(player, players, level);
 };
 
 /** Draw sky */
@@ -120,6 +121,57 @@ Camera.prototype.drawSky = function (direction, ambient) {
   }
   this.ctx.restore();
 };
+
+/** Draw maps */
+
+Camera.prototype.drawMiniMap = function (player, players, level) {
+  let ctx = this.ctx;
+
+  let startX = 0;
+  let startY = 0;
+  let width = 50;
+  let height = 50;
+  let stepX = width / level.size;
+  let stepY = height / level.size;
+
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = "#000000"
+  ctx.fillRect(startX, startY, width, height);
+  ctx.fillStyle = "#808080";
+
+  /** Draw walls */
+  for (let i = 0;i < level.size;i++) {
+    for (let j = 0;j < level.size;j++) {
+      let wall = level.walls[j*level.size + i];
+      if (wall !== 0) {
+        ctx.fillRect(i*stepX, j*stepY, stepX, stepY);
+      }
+    }
+  }
+
+  let plX;
+  let plY;
+  /** Draw other players */
+  ctx.fillStyle = "#0000FF";
+  for (let k = 0;k < players.length;k++) {
+    const pl = players[k];
+    if (pl.number !== player.number) {
+      plX = pl.pos.x;
+      plY = pl.pos.y;
+      ctx.beginPath();
+      ctx.arc(plX*stepX, plY*stepY, stepX/2, 0, Math.PI*2);
+      ctx.fill();
+    }
+  }
+
+  /** Draw player */
+  plX = player.pos.x;
+  plY = player.pos.y;
+  ctx.fillStyle = "#008000";
+  ctx.beginPath();
+  ctx.arc(plX*stepX, plY*stepY, stepX/2, 0, Math.PI*2);
+  ctx.fill();
+}
 
 /** Draw weapon */
 
