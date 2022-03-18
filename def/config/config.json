@@ -20,11 +20,23 @@
     ],
     "ui": {
         "raycaster": {
-            "resolution": 320,
-            "focalLength": 0.8,
-            "range": 30,
-            "lightRange": 10,
-            "scaleFactor": 1200
+            "initialValues": {
+                "resolution": 300,
+                "focalLength": 0.8,
+                "range": 30,
+                "lightRange": 10,
+                "scaleFactor": 1200
+            },
+            "valueRanges": {
+                "resolution": {
+                    "min": 20,
+                    "max": 1000
+                },
+                "range": {
+                    "min": 5,
+                    "max": 100
+                }
+            }
         },
         "minimap": {
             "show": true,

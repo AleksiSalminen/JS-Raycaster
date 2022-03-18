@@ -45,7 +45,7 @@ module.exports = {
 
     client.join(roomName);
     client.number = 1;
-    client.emit("init", 1, roomName);
+    client.emit("init", 1, roomName, state[roomName]);
 
     startGameInterval(roomName);
   },
@@ -80,7 +80,6 @@ module.exports = {
 
     client.join(roomName);
     client.number = numClients + 1;
-    client.emit("init", numClients + 1, roomName);
 
     const playerAmount = state[roomName].players.length;
     const newPlayer = new Player(
@@ -101,6 +100,7 @@ module.exports = {
     );
     
     state[roomName].players.push(newPlayer);
+    client.emit("init", numClients + 1, roomName, state[roomName]);
   },
 
   /**

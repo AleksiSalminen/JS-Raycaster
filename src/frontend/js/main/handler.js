@@ -23,12 +23,16 @@ socket.on('tooManyPlayers', handleTooManyPlayers);
  * @param {*} playerNumber 
  * @param {*} gameState 
  */
-function updateGame(playerNumber, gameState) {
+function updateGame (playerNumber, gameState) {
   console.log(gameCode);
   console.log(gameState);
 
   player = findPlayer(playerNumber, gameState.players);
   GRAPHICS.updateGraphics(player, gameState.players, gameState.level, gameState.ui);
+}
+
+function initGame (gameState) {
+  GRAPHICS.initGraphics(gameState.ui);
 }
 
 
@@ -123,9 +127,10 @@ function handleGameState(gameState) {
  * 
  * @param {*} plNumber 
  */
-function handleInit(plNumber, code) {
+function handleInit(plNumber, code, gameState) {
   playerNumber = plNumber;
   gameCode = code;
+  initGame(gameState);
 }
 
 /**
