@@ -17,6 +17,7 @@ const otherPlayerImagePath = '../../images/other_player/';
 const fpsImagePath = '../../images/fps/';
 
 let weaponImg;
+let minimap;
 let skyImg;
 let wallImages = [];
 let otherPlayerImageSet = [
@@ -81,7 +82,7 @@ let otherPlayerImageSet = [
  * @param {*} resolution 
  * @param {*} focalLength 
  */
-function Camera(canvas, resolution, focalLength, range, lightRange, scaleFactor) {
+function Camera(canvas, resolution, focalLength, range, lightRange, scaleFactor, newMinimap) {
   this.canvas = canvas;
   this.ctx = canvas.getContext('2d');
   this.width = canvas.width = window.innerWidth * 0.5;
@@ -92,6 +93,7 @@ function Camera(canvas, resolution, focalLength, range, lightRange, scaleFactor)
   this.range = range;
   this.lightRange = lightRange;
   this.scale = (this.width + this.height) / scaleFactor;
+  minimap = newMinimap;
 }
 
 
@@ -105,8 +107,8 @@ Camera.prototype.render = function (player, players, level, ui) {
   this.drawSky(player.pos.rotation, level);
   this.drawColumns(player, players, level);
   this.drawWeapon(player.weaponImg);
-  if (ui.minimap.initialValues.show) {
-    this.drawMiniMap(player, players, level, ui.minimap);
+  if (minimap.show) {
+    this.drawMiniMap(player, players, level);
   }
 };
 
@@ -135,58 +137,25 @@ Camera.prototype.drawSky = function (direction, level) {
 
 /** Draw maps */
 
-Camera.prototype.drawMiniMap = function (player, players, level, settings) {
+Camera.prototype.drawMiniMap = function (player, players, level) {
   let ctx = this.ctx;
   
-  let width = settings.initialValues.width;
-  let height = settings.initialValues.height;
+  let width = minimap.width;
+  let height = minimap.height;
   let stepX = width / level.dimensions.width;
   let stepY = height / level.dimensions.height;
 
-  const TOP_LEFT = settings.valueRanges.position[0];
-  const TOP = settings.valueRanges.position[1];
-  const TOP_RIGHT = settings.valueRanges.position[2];
-  const BOTTOM_LEFT = settings.valueRanges.position[3];
-  const BOTTOM = settings.valueRanges.position[4];
-  const BOTTOM_RIGHT = settings.valueRanges.position[5];
-
-  let startX, startY;
-  let pos = settings.initialValues.position;
-  if (pos === TOP_LEFT) {
-    startX = 0;
-    startY = 0;
-  }
-  else if (pos === TOP) {
-    startX = this.width/2 - width/2;
-    startY = 0;
-  }
-  else if (pos === TOP_RIGHT) {
-    startX = this.width - width;
-    startY = 0;
-  }
-  else if (pos === BOTTOM_LEFT) {
-    startX = 0;
-    startY = this.height - height;
-  }
-  else if (pos === BOTTOM) {
-    startX = this.width/2 - width/2;
-    startY = this.height - height;
-  }
-  else if (pos === BOTTOM_RIGHT) {
-    startX = this.width - width;
-    startY = this.height - height;
-  }
-  else {
-    startX = 0; startY = 0;
-  }
+  const coordinates = minimap.getCoordinates(this.width, this.height);
+  let startX = coordinates.x;
+  let startY = coordinates.y;
 
   /** Draw background */
   ctx.globalAlpha = 1;
-  ctx.fillStyle = settings.initialValues.backgroundColor;
+  ctx.fillStyle = minimap.backgroundColor;
   ctx.fillRect(startX, startY, width, height);
 
   /** Draw walls */
-  ctx.fillStyle = settings.initialValues.wallColor;
+  ctx.fillStyle = minimap.wallColor;
   for (let i = 0;i < level.dimensions.width;i++) {
     for (let j = 0;j < level.dimensions.height;j++) {
       let wall = level.walls[j*level.dimensions.width + i];
@@ -198,8 +167,9 @@ Camera.prototype.drawMiniMap = function (player, players, level, settings) {
 
   let plX;
   let plY;
+  
   /** Draw other players */
-  ctx.fillStyle = settings.initialValues.otherPlayerColor;
+  ctx.fillStyle = minimap.otherPlayerColor;
   for (let k = 0;k < players.length;k++) {
     const pl = players[k];
     if (pl.number !== player.number) {
@@ -214,7 +184,7 @@ Camera.prototype.drawMiniMap = function (player, players, level, settings) {
   /** Draw player */
   plX = player.pos.x;
   plY = player.pos.y;
-  ctx.fillStyle = settings.initialValues.playerColor;
+  ctx.fillStyle = minimap.playerColor;
   ctx.beginPath();
   ctx.arc(startX + plX*stepX, startY + plY*stepY, stepX/2, 0, Math.PI*2);
   ctx.fill();

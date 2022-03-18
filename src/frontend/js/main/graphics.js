@@ -1,5 +1,6 @@
 
 import { GAMECAMERA } from './camera.js';
+import { MAPS } from './maps.js';
 
 let titleScreen = document.getElementById("titleScreen");
 let gameDisplay = document.getElementById('gameDisplay');
@@ -16,6 +17,9 @@ function initGraphics (settings) {
 
   uiSettings = settings;
 
+  /** Create a new minimap */
+  let minimap = new MAPS.Minimap(settings.minimap);
+
   /** Create a new Camera instance */
   const rays = settings.raycaster.initialValues;
   gameCamera = new GAMECAMERA.Camera(
@@ -24,7 +28,8 @@ function initGraphics (settings) {
     rays.focalLength, 
     rays.range, 
     rays.lightRange, 
-    rays.scaleFactor
+    rays.scaleFactor,
+    minimap
   );
 
   initialized = true;
