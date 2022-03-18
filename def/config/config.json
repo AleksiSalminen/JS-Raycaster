@@ -39,10 +39,37 @@
             }
         },
         "minimap": {
-            "show": true,
-            "position": "top-left",
-            "width": 50,
-            "height": 50
+            "initialValues": {
+                "show": true,
+                "position": "top-left",
+                "width": 50,
+                "height": 50,
+                "wallColor": "#808080",
+                "backgroundColor": "#000000",
+                "playerColor": "#008000",
+                "otherPlayerColor": "#0000FF"
+            },
+            "valueRanges": {
+                "show": [
+                    true, false
+                ],
+                "position": [
+                    "top-left",
+                    "top",
+                    "top-right",
+                    "bottom-left",
+                    "bottom",
+                    "bottom-right"
+                ],
+                "width": {
+                    "min": 20,
+                    "max": 150
+                },
+                "height": {
+                    "min": 20,
+                    "max": 150
+                }
+            }
         }
     }
 }

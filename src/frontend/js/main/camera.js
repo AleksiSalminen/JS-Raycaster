@@ -9,7 +9,6 @@ import { ANIMATION } from './animation.js';
  */
 
 const CIRCLE = Math.PI * 2;
-const MOBILE = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
 
 const uiImagePath = '../../images/ui/';
 const skyboxImagePath = '../../images/skyboxes/';
@@ -106,7 +105,7 @@ Camera.prototype.render = function (player, players, level, ui) {
   this.drawSky(player.pos.rotation, level);
   this.drawColumns(player, players, level);
   this.drawWeapon(player.weaponImg);
-  if (ui.minimap.show) {
+  if (ui.minimap.initialValues.show) {
     this.drawMiniMap(player, players, level, ui.minimap);
   }
 };
@@ -138,21 +137,21 @@ Camera.prototype.drawSky = function (direction, level) {
 
 Camera.prototype.drawMiniMap = function (player, players, level, settings) {
   let ctx = this.ctx;
-
-  let width = settings.width;
-  let height = settings.height;
+  
+  let width = settings.initialValues.width;
+  let height = settings.initialValues.height;
   let stepX = width / level.dimensions.width;
   let stepY = height / level.dimensions.height;
 
-  const TOP_LEFT = "top-left";
-  const TOP = "top";
-  const TOP_RIGHT = "top-right";
-  const BOTTOM_LEFT = "bottom-left";
-  const BOTTOM = "bottom";
-  const BOTTOM_RIGHT = "bottom-right";
+  const TOP_LEFT = settings.valueRanges.position[0];
+  const TOP = settings.valueRanges.position[1];
+  const TOP_RIGHT = settings.valueRanges.position[2];
+  const BOTTOM_LEFT = settings.valueRanges.position[3];
+  const BOTTOM = settings.valueRanges.position[4];
+  const BOTTOM_RIGHT = settings.valueRanges.position[5];
 
   let startX, startY;
-  let pos = settings.position;
+  let pos = settings.initialValues.position;
   if (pos === TOP_LEFT) {
     startX = 0;
     startY = 0;
@@ -181,12 +180,13 @@ Camera.prototype.drawMiniMap = function (player, players, level, settings) {
     startX = 0; startY = 0;
   }
 
+  /** Draw background */
   ctx.globalAlpha = 1;
-  ctx.fillStyle = "#000000"
+  ctx.fillStyle = settings.initialValues.backgroundColor;
   ctx.fillRect(startX, startY, width, height);
-  ctx.fillStyle = "#808080";
 
   /** Draw walls */
+  ctx.fillStyle = settings.initialValues.wallColor;
   for (let i = 0;i < level.dimensions.width;i++) {
     for (let j = 0;j < level.dimensions.height;j++) {
       let wall = level.walls[j*level.dimensions.width + i];
@@ -199,7 +199,7 @@ Camera.prototype.drawMiniMap = function (player, players, level, settings) {
   let plX;
   let plY;
   /** Draw other players */
-  ctx.fillStyle = "#0000FF";
+  ctx.fillStyle = settings.initialValues.otherPlayerColor;
   for (let k = 0;k < players.length;k++) {
     const pl = players[k];
     if (pl.number !== player.number) {
@@ -214,7 +214,7 @@ Camera.prototype.drawMiniMap = function (player, players, level, settings) {
   /** Draw player */
   plX = player.pos.x;
   plY = player.pos.y;
-  ctx.fillStyle = "#008000";
+  ctx.fillStyle = settings.initialValues.playerColor;
   ctx.beginPath();
   ctx.arc(startX + plX*stepX, startY + plY*stepY, stepX/2, 0, Math.PI*2);
   ctx.fill();
