@@ -10,36 +10,58 @@
 	<script type="text/javascript" src="./js/helpers/socket.io.js"></script>
 </head>
 
-<body id="body">
+<body id="body" style="color: #FFFFFF;background-color:#000000;">
 
-	<div id="titleScreen">
+	<div id="titleScreen" style='width: 30%; height: 30%; margin: 0 auto; text-align: center'>
+		</br>
 		<h1>JS-Raycaster</h1>
 		</br>
 		<div>
 			<input type="text" placeholder="Your name" id="name" />
 		</div>
-		</br></br>
+		</br></br></br>
 		<button type="submit" id="newGameButton">
 			Create New Game
 		</button>
+		</br></br>
 		<div>OR</div>
+		</br>
 		<div>
 			<input type="text" placeholder="Enter Game Code" id="gameCodeInput" />
 		</div>
+		</br>
 		<button type="submit" id="joinGameButton">
 			Join Game
 		</button>
 	</div>
 
-	<div id="gameLobby" style='display:none;'>
+	<div id="gameLobby" style='display:none; width: 30%; height: 30%; margin: 0 auto; text-align: center'>
+		</br></br>
 		<h2>Lobby</h2>
+		</br>
 		<p id="gameCodeText"></p>
+		</br>
 		<p>Players:</p>
-		<ul id="playersList" style='list-style-position: inside; padding-left: 0;'></ul>
+		<ul id="playersList" style='list-style: none; padding-left: 0;'></ul>
+		</br></br>
 		<button id="launchGameButton">Launch</button>
 	</div>
 
-	<canvas id='gameDisplay' width='1' height='1' style='display:none; width: 100%; height: 100%;' >
+	<div id="gameView" style='display:none;'>
+		<table style="width: 90%; height: 90%; text-align: center;">
+			<tr>
+				<td>
+					<p>AA</p>
+				</td>
+				<td>
+					<canvas id='gameDisplay' width='1' height='1' >
+				</td>
+				<td>
+					<p>BB</p>
+				</td>
+			</tr>
+		</table>
+	</div>
 
 	<script type="text/javascript" src="./js/helpers/jquery.min.js"></script>
 

@@ -62,8 +62,8 @@
             "initialValues": {
                 "show": true,
                 "position": "top-left",
-                "width": 50,
-                "height": 50,
+                "width": 80,
+                "height": 80,
                 "wallColor": "#808080",
                 "backgroundColor": "#000000",
                 "playerColor": "#008000",

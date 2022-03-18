@@ -4,6 +4,7 @@ import { MAPS } from './maps.js';
 
 let titleScreen = document.getElementById("titleScreen");
 let lobbyScreen = document.getElementById("gameLobby");
+let gameView = document.getElementById("gameView");
 let gameDisplay = document.getElementById('gameDisplay');
 
 let initialized = false;
@@ -12,11 +13,10 @@ let uiSettings;
 
 
 function initGraphics(settings) {
-  console.log("A");
   /** Hide the main menu and game lobby, show the game canvas */
   titleScreen.style.display = "none";
   lobbyScreen.style.display = "none";
-  gameDisplay.style.display = "block";
+  gameView.style.display = "block";
 
   uiSettings = settings;
 
@@ -50,15 +50,15 @@ function updateGraphics(player, players, level) {
 }
 
 function initLobby(player, players, gameCode) {
-  /** Hide main menu and game display, show game lobby */
+  /** Hide main menu and game view, show game lobby */
   titleScreen.style.display = "none";
-  gameDisplay.style.display = "none";
+  gameView.style.display = "none";
   lobbyScreen.style.display = "block";
 
   document.getElementById("gameCodeText").innerHTML = "Gamecode: " + gameCode;
 
   let playersList = document.getElementById("playersList");
-  let playersListString = "<ul id='playersList' style='list-style-position: inside; padding-left: 0;'>";
+  let playersListString = "<ul id='playersList' style='list-style: none; padding-left: 0;'>";
   for (let i = 0;i < players.length;i++) {
     if (players[i].number !== player.number) {
       playersListString += "<li>" + players[i].name + "</li>";
