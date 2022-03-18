@@ -29,6 +29,8 @@ function initGraphics (settings) {
     rays.range, 
     rays.lightRange, 
     rays.scaleFactor,
+    settings.images.paths,
+    settings.images.animation,
     minimap
   );
 

@@ -12,7 +12,7 @@ class Camera {
    * 
    */
 
-  constructor(canvas, resolution, focalLength, range, lightRange, scaleFactor, newMinimap) {
+  constructor(canvas, resolution, focalLength, range, lightRange, scaleFactor, imagePaths, animImgs, newMinimap) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
 
@@ -27,64 +27,67 @@ class Camera {
 
     this.minimap = newMinimap;
 
-    this.uiImagePath = '../../images/ui/';
-    this.skyboxImagePath = '../../images/skyboxes/';
-    this.wallImagePath = '../../images/walls/';
-    this.otherPlayerImagePath = '../../images/other_player/';
-    this.fpsImagePath = '../../images/fps/';
+    this.uiImagePath = imagePaths.uiImagePath;
+    this.skyboxImagePath = imagePaths.skyboxImagePath;
+    this.wallImagePath = imagePaths.wallImagePath;
+    this.otherPlayerImagePath = imagePaths.otherPlayerImagePath;
+    this.fpsImagePath = imagePaths.fpsImagePath;
 
     this.weaponImg;
     this.skyImg;
     this.wallImages = [];
+    let opPath = this.otherPlayerImagePath;
+    let opWidth = animImgs.width;
+    let opHeight = animImgs.height;
     this.otherPlayerImageSet = [
       /** Front facing images */
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-f-1.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-f-2.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-f-3.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-f-4.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-f-5.png', 400, 700),
+      new IMG_PROC.Bitmap(opPath +  animImgs.opf1, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath +  animImgs.opf2, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath +  animImgs.opf3, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath +  animImgs.opf4, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath +  animImgs.opf5, opWidth, opHeight),
       /** Back facing images */
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-b-1.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-b-2.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-b-3.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-b-4.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-b-5.png', 400, 700),
+      new IMG_PROC.Bitmap(opPath +  animImgs.opb1, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath +  animImgs.opb2, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath +  animImgs.opb3, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath +  animImgs.opb4, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath +  animImgs.opb5, opWidth, opHeight),
       /** Left facing images */
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-l-1.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-l-2.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-l-3.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-l-4.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-l-5.png', 400, 700),
+      new IMG_PROC.Bitmap(opPath +  animImgs.opl1, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath +  animImgs.opl2, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath +  animImgs.opl3, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath +  animImgs.opl4, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath +  animImgs.opl5, opWidth, opHeight),
       /** Right facing images */
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-r-1.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-r-2.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-r-3.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-r-4.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-r-5.png', 400, 700),
+      new IMG_PROC.Bitmap(opPath +  animImgs.opr1, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath +  animImgs.opr2, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath +  animImgs.opr3, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath +  animImgs.opr4, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath +  animImgs.opr5, opWidth, opHeight),
       /** Front-left facing images */
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-fl-1.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-fl-2.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-fl-3.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-fl-4.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-fl-5.png', 400, 700),
+      new IMG_PROC.Bitmap(opPath + animImgs.opfl1, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath + animImgs.opfl2, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath + animImgs.opfl3, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath + animImgs.opfl4, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath + animImgs.opfl5, opWidth, opHeight),
       /** Front-right facing images */
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-fr-1.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-fr-2.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-fr-3.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-fr-4.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-fr-5.png', 400, 700),
+      new IMG_PROC.Bitmap(opPath + animImgs.opfr1, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath + animImgs.opfr2, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath + animImgs.opfr3, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath + animImgs.opfr4, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath + animImgs.opfr5, opWidth, opHeight),
       /** Back-left facing images */
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-bl-1.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-bl-2.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-bl-3.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-bl-4.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-bl-5.png', 400, 700),
+      new IMG_PROC.Bitmap(opPath + animImgs.opbl1, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath + animImgs.opbl2, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath + animImgs.opbl3, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath + animImgs.opbl4, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath + animImgs.opbl5, opWidth, opHeight),
       /** Back-right facing images */
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-br-1.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-br-2.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-br-3.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-br-4.png', 400, 700),
-      new IMG_PROC.Bitmap(this.otherPlayerImagePath + 'op-br-5.png', 400, 700)
+      new IMG_PROC.Bitmap(opPath + animImgs.opbr1, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath + animImgs.opbr2, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath + animImgs.opbr3, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath + animImgs.opbr4, opWidth, opHeight),
+      new IMG_PROC.Bitmap(opPath + animImgs.opbr5, opWidth, opHeight)
     ];
   }
 
