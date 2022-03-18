@@ -18,41 +18,24 @@ module.exports = {
     let roomName = helpers.makeid(5);
     clientRooms[client.id] = roomName;
 
-    const level1 = LEVELS[0];
-
-    const pl1 = new Player(
-      client.id, 
-      params.name, 
-      1, 
-      config.players.maxHealth, 
-      config.players.maxHealth, 
-      config.players.walkSpeed, 
-      config.players.turnSpeed, 
-      {
-        x: level1.playerSpawn.x,
-        y: level1.playerSpawn.y,
-        rotation: 0
-      },
-      config.players.height, 
-      config.players.width
-    );
-  
     state[roomName] = {
-      level: level1,
-      players: [pl1],
-      ui: config.ui
+      status: "Lobby",
+      players: [
+        {
+          client: client.id,
+          name: params.name,
+          number: 1
+        }
+      ]
     };
 
     client.join(roomName);
     client.number = 1;
-    client.emit("init", 1, roomName, state[roomName]);
-
-    startGameInterval(roomName);
+    client.emit("lobby", client.number, roomName, state[roomName]);
   },
 
   /**
    * 
-   * @param {*} roomName 
    */
   joinGame(client, params) {
     const roomName = params.code
@@ -71,9 +54,14 @@ module.exports = {
     if (numClients === 0) {
       client.emit("unknownCode");
       return;
-    } else if (numClients > config.system.maxNumberOfPlayers - 1) {
+    }
+    else if (numClients > config.system.maxNumberOfPlayers - 1) {
       client.emit("tooManyPlayers");
       return;
+    }
+    else if (state[roomName].status === "Playing") {
+      client.emit("gameHasStarted");
+      return
     }
 
     clientRooms[client.id] = roomName;
@@ -82,25 +70,52 @@ module.exports = {
     client.number = numClients + 1;
 
     const playerAmount = state[roomName].players.length;
-    const newPlayer = new Player(
-      client.id, 
-      params.name, 
-      state[roomName].players[playerAmount-1].number + 1, 
-      config.players.maxHealth, 
-      config.players.maxHealth, 
-      config.players.walkSpeed, 
-      config.players.turnSpeed, 
-      {
-        x: state[roomName].level.playerSpawn.x,
-        y: state[roomName].level.playerSpawn.y,
-        rotation: 0
-      },
-      config.players.height, 
-      config.players.width
-    );
-    
-    state[roomName].players.push(newPlayer);
-    client.emit("init", numClients + 1, roomName, state[roomName]);
+    state[roomName].players.push({
+      client: client.id,
+      name: params.name,
+      number: state[roomName].players[playerAmount - 1].number + 1
+    });
+
+    emitLobbyState(roomName, state[roomName]);
+  },
+
+  /**
+   * 
+   */
+  launchGame(client, params) {
+    const roomName = clientRooms[client.id];
+    if (!roomName) {
+      return;
+    }
+
+    const level = LEVELS[0];
+
+    let stateCurrent = state[roomName];
+    for (let i = 0; i < stateCurrent.players.length; i++) {
+      stateCurrent.players[i] = new Player(
+        stateCurrent.players[i].client,
+        stateCurrent.players[i].name,
+        stateCurrent.players[i].number,
+        config.players.maxHealth,
+        config.players.maxHealth,
+        config.players.walkSpeed,
+        config.players.turnSpeed,
+        {
+          x: level.playerSpawn.x,
+          y: level.playerSpawn.y,
+          rotation: 0
+        },
+        config.players.height,
+        config.players.width
+      );
+    }
+
+    state[roomName].level = level;
+    state[roomName].ui = config.ui;
+    state[roomName].status = "Playing";
+
+    emitGameLaunch(roomName, state[roomName]);
+    startGameInterval(roomName);
   },
 
   /**
@@ -114,12 +129,16 @@ module.exports = {
       return;
     }
 
-    for (let i = 0;i < state[roomName].players.length;i++) {
+    for (let i = 0; i < state[roomName].players.length; i++) {
       let player = state[roomName].players[i];
       if (player.client === client.id) {
         state[roomName].players.splice(i, 1);
         i = state[roomName].players.length;
       }
+    }
+
+    if (state[roomName].status === "Lobby") {
+      emitLobbyState(roomName, state[roomName]);
     }
   },
 
@@ -146,20 +165,20 @@ module.exports = {
           newPlayerPos.y = newPlayerPos.y - Math.cos(newPlayerPos.rotation + Math.PI / 2) * playerSpeed;
         }
         else if (params.dir === "Back") {
-          newPlayerPos.x = newPlayerPos.x + Math.sin(newPlayerPos.rotation - Math.PI / 2) * (playerSpeed/2);
-          newPlayerPos.y = newPlayerPos.y - Math.cos(newPlayerPos.rotation - Math.PI / 2) * (playerSpeed/2);
+          newPlayerPos.x = newPlayerPos.x + Math.sin(newPlayerPos.rotation - Math.PI / 2) * (playerSpeed / 2);
+          newPlayerPos.y = newPlayerPos.y - Math.cos(newPlayerPos.rotation - Math.PI / 2) * (playerSpeed / 2);
         }
         else if (params.dir === "Left") {
-          newPlayerPos.x = newPlayerPos.x + Math.sin(character.pos.rotation) * (playerSpeed/2);
-          newPlayerPos.y = newPlayerPos.y - Math.cos(character.pos.rotation) * (playerSpeed/2);
+          newPlayerPos.x = newPlayerPos.x + Math.sin(character.pos.rotation) * (playerSpeed / 2);
+          newPlayerPos.y = newPlayerPos.y - Math.cos(character.pos.rotation) * (playerSpeed / 2);
         }
         else if (params.dir === "Right") {
-          newPlayerPos.x = newPlayerPos.x - Math.sin(character.pos.rotation) * (playerSpeed/2);
-          newPlayerPos.y = newPlayerPos.y + Math.cos(character.pos.rotation) * (playerSpeed/2);
+          newPlayerPos.x = newPlayerPos.x - Math.sin(character.pos.rotation) * (playerSpeed / 2);
+          newPlayerPos.y = newPlayerPos.y + Math.cos(character.pos.rotation) * (playerSpeed / 2);
         }
         else if (params.dir === "RotLeft") {
           if (params.movementX) {
-            newPlayerPos.rotation = newPlayerPos.rotation + params.movementX/150;
+            newPlayerPos.rotation = newPlayerPos.rotation + params.movementX / 150;
           }
           else {
             newPlayerPos.rotation = newPlayerPos.rotation - playerTurnSpeed;
@@ -175,7 +194,7 @@ module.exports = {
         }
         else if (params.dir === "RotRight") {
           if (params.movementX) {
-            newPlayerPos.rotation = newPlayerPos.rotation + params.movementX/150;
+            newPlayerPos.rotation = newPlayerPos.rotation + params.movementX / 150;
           }
           else {
             newPlayerPos.rotation = newPlayerPos.rotation + playerTurnSpeed;
@@ -216,7 +235,7 @@ function gameLoop(roomName) {
     return;
   }
 
-  for (h = 0;h < state[roomName].players.length;h++) {
+  for (h = 0; h < state[roomName].players.length; h++) {
     let player = state[roomName].players[h];
     if (player.moving) {
       player.animation.update();
@@ -236,7 +255,20 @@ function startGameInterval(roomName) {
 }
 
 function emitGameState(room, gameState) {
-  // Send this event to everyone in the room.
   io.sockets.in(room).emit("gameState", JSON.stringify(gameState));
+}
+
+function emitLobbyState(room, gameState) {
+  for (let i = 0;i < gameState.players.length;i++) {
+    let player = gameState.players[i];
+    io.to(player.client).emit("lobby", player.number, room, gameState);
+  }
+}
+
+function emitGameLaunch(room, gameState) {
+  for (let i = 0;i < gameState.players.length;i++) {
+    let player = gameState.players[i];
+    io.to(player.client).emit("init", gameState);
+  }
 }
 

@@ -12,18 +12,15 @@ let player;
 const socket = io(serverAddress);
 
 /* Set the socket message listeners */
+socket.on("lobby", handleLobby);
 socket.on("init", handleInit);
 socket.on("gameState", handleGameState);
 socket.on('unknownCode', handleUnknownCode);
 socket.on('tooManyPlayers', handleTooManyPlayers);
+socket.on('gameHasStarted', handleGameHasStarted);
 
 
-/**
- * Updates the game
- * @param {*} playerNumber 
- * @param {*} gameState 
- */
-function updateGame (playerNumber, gameState) {
+function updateGame(playerNumber, gameState) {
   console.log(gameCode);
   console.log(gameState);
 
@@ -31,8 +28,13 @@ function updateGame (playerNumber, gameState) {
   GRAPHICS.updateGraphics(player, gameState.players, gameState.level);
 }
 
-function initGame (gameState) {
+function initGame(gameState) {
   GRAPHICS.initGraphics(gameState.ui);
+}
+
+function initLobby(gameState) {
+  player = findPlayer(playerNumber, gameState.players);
+  GRAPHICS.initLobby(player, gameState.players, gameCode);
 }
 
 
@@ -61,6 +63,14 @@ function joinGame() {
   socket.emit('joinGame', { code: code, name: name });
 }
 document.getElementById('joinGameButton').addEventListener('click', joinGame);
+
+/**
+ * Emit a message to the server to launch the game
+ */
+function launchGame() {
+  socket.emit('launchGame', {});
+}
+document.getElementById('launchGameButton').addEventListener('click', launchGame);
 
 /**
  * Emits the corresponding messages to the server according to the 
@@ -123,13 +133,17 @@ function handleGameState(gameState) {
   updateGame(playerNumber, gameState);
 }
 
+function handleLobby(plNumber, code, gameState) {
+  playerNumber = plNumber;
+  gameCode = code;
+  initLobby(gameState);
+}
+
 /**
  * 
  * @param {*} plNumber 
  */
-function handleInit(plNumber, code, gameState) {
-  playerNumber = plNumber;
-  gameCode = code;
+function handleInit(gameState) {
   initGame(gameState);
 }
 
@@ -138,7 +152,7 @@ function handleInit(plNumber, code, gameState) {
  */
 function handleUnknownCode() {
   playerNumber = null;
-  alert('Tuntematon pelikoodi')
+  alert('Unknown game code')
 }
 
 /**
@@ -146,7 +160,15 @@ function handleUnknownCode() {
  */
 function handleTooManyPlayers() {
   playerNumber = null;
-  alert('Pelihuone on täynnä');
+  alert('Game lobby is full');
+}
+
+/**
+ * If the game has already started
+ */
+function handleGameHasStarted() {
+  playerNumber = null;
+  alert('The game has already started');
 }
 
 

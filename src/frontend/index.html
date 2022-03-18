@@ -31,7 +31,15 @@
 		</button>
 	</div>
 
-	<canvas id='gameDisplay' width='1' height='1' style='display:none; width: 100%; height: 100%;' />
+	<div id="gameLobby" style='display:none;'>
+		<h2>Lobby</h2>
+		<p id="gameCodeText"></p>
+		<p>Players:</p>
+		<ul id="playersList" style='list-style-position: inside; padding-left: 0;'></ul>
+		<button id="launchGameButton">Launch</button>
+	</div>
+
+	<canvas id='gameDisplay' width='1' height='1' style='display:none; width: 100%; height: 100%;' >
 
 	<script type="text/javascript" src="./js/helpers/jquery.min.js"></script>
 
