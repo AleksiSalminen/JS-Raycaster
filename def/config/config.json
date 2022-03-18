@@ -17,5 +17,20 @@
     "levels": [
         "test-level",
         "test-level2"
-    ]
+    ],
+    "ui": {
+        "raycaster": {
+            "resolution": 320,
+            "focalLength": 0.8,
+            "range": 30,
+            "lightRange": 10,
+            "scaleFactor": 1200
+        },
+        "minimap": {
+            "show": true,
+            "position": "top-left",
+            "width": 50,
+            "height": 50
+        }
+    }
 }

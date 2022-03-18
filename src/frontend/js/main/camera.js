@@ -82,7 +82,7 @@ let otherPlayerImageSet = [
  * @param {*} resolution 
  * @param {*} focalLength 
  */
-function Camera(canvas, resolution, focalLength) {
+function Camera(canvas, resolution, focalLength, range, lightRange, scaleFactor) {
   this.canvas = canvas;
   this.ctx = canvas.getContext('2d');
   this.width = canvas.width = window.innerWidth * 0.5;
@@ -90,9 +90,9 @@ function Camera(canvas, resolution, focalLength) {
   this.resolution = resolution;
   this.spacing = this.width / resolution;
   this.focalLength = focalLength || 0.8;
-  this.range = MOBILE ? 20 : 30;
-  this.lightRange = 10;
-  this.scale = (this.width + this.height) / 1200;
+  this.range = range;
+  this.lightRange = lightRange;
+  this.scale = (this.width + this.height) / scaleFactor;
 }
 
 
@@ -102,11 +102,13 @@ function Camera(canvas, resolution, focalLength) {
 
 /** The main rendering method */
 
-Camera.prototype.render = function (player, players, level) {
+Camera.prototype.render = function (player, players, level, ui) {
   this.drawSky(player.pos.rotation, level);
   this.drawColumns(player, players, level);
   this.drawWeapon(player.weaponImg);
-  this.drawMiniMap(player, players, level);
+  if (ui.minimap.show) {
+    this.drawMiniMap(player, players, level, ui.minimap);
+  }
 };
 
 /** Draw sky */
@@ -134,15 +136,50 @@ Camera.prototype.drawSky = function (direction, level) {
 
 /** Draw maps */
 
-Camera.prototype.drawMiniMap = function (player, players, level) {
+Camera.prototype.drawMiniMap = function (player, players, level, settings) {
   let ctx = this.ctx;
 
-  let startX = 0;
-  let startY = 0;
-  let width = 50;
-  let height = 50;
+  let width = settings.width;
+  let height = settings.height;
   let stepX = width / level.dimensions.width;
   let stepY = height / level.dimensions.height;
+
+  const TOP_LEFT = "top-left";
+  const TOP = "top";
+  const TOP_RIGHT = "top-right";
+  const BOTTOM_LEFT = "bottom-left";
+  const BOTTOM = "bottom";
+  const BOTTOM_RIGHT = "bottom-right";
+
+  let startX, startY;
+  let pos = settings.position;
+  if (pos === TOP_LEFT) {
+    startX = 0;
+    startY = 0;
+  }
+  else if (pos === TOP) {
+    startX = this.width/2 - width/2;
+    startY = 0;
+  }
+  else if (pos === TOP_RIGHT) {
+    startX = this.width - width;
+    startY = 0;
+  }
+  else if (pos === BOTTOM_LEFT) {
+    startX = 0;
+    startY = this.height - height;
+  }
+  else if (pos === BOTTOM) {
+    startX = this.width/2 - width/2;
+    startY = this.height - height;
+  }
+  else if (pos === BOTTOM_RIGHT) {
+    startX = this.width - width;
+    startY = this.height - height;
+  }
+  else {
+    startX = 0; startY = 0;
+  }
 
   ctx.globalAlpha = 1;
   ctx.fillStyle = "#000000"
@@ -154,7 +191,7 @@ Camera.prototype.drawMiniMap = function (player, players, level) {
     for (let j = 0;j < level.dimensions.height;j++) {
       let wall = level.walls[j*level.dimensions.width + i];
       if (wall !== 0) {
-        ctx.fillRect(i*stepX, j*stepY, stepX, stepY);
+        ctx.fillRect(startX + i*stepX, startY + j*stepY, stepX, stepY);
       }
     }
   }
@@ -169,7 +206,7 @@ Camera.prototype.drawMiniMap = function (player, players, level) {
       plX = pl.pos.x;
       plY = pl.pos.y;
       ctx.beginPath();
-      ctx.arc(plX*stepX, plY*stepY, stepX/2, 0, Math.PI*2);
+      ctx.arc(startX + plX*stepX, startY + plY*stepY, stepX/2, 0, Math.PI*2);
       ctx.fill();
     }
   }
@@ -179,7 +216,7 @@ Camera.prototype.drawMiniMap = function (player, players, level) {
   plY = player.pos.y;
   ctx.fillStyle = "#008000";
   ctx.beginPath();
-  ctx.arc(plX*stepX, plY*stepY, stepX/2, 0, Math.PI*2);
+  ctx.arc(startX + plX*stepX, startY + plY*stepY, stepX/2, 0, Math.PI*2);
   ctx.fill();
 }
 

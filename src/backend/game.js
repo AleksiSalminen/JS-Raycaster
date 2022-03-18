@@ -39,7 +39,8 @@ module.exports = {
   
     state[roomName] = {
       level: level1,
-      players: [pl1]
+      players: [pl1],
+      ui: config.ui
     };
 
     client.join(roomName);
