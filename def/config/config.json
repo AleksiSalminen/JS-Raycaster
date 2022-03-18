@@ -10,7 +10,7 @@
     "players": {
         "maxHealth": 100,
         "walkSpeed": 0.04,
-        "turnSpeed": 0.04,
+        "turnSpeed": 0.08,
         "height": 0.7,
         "width": 0.4
     },

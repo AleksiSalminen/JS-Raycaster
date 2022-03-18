@@ -181,7 +181,7 @@ module.exports = {
             newPlayerPos.rotation = newPlayerPos.rotation + params.movementX / 150;
           }
           else {
-            newPlayerPos.rotation = newPlayerPos.rotation - playerTurnSpeed;
+            newPlayerPos.rotation = newPlayerPos.rotation - config.players.turnSpeed;
           }
 
           if (newPlayerPos.rotation < 0) {
@@ -197,7 +197,7 @@ module.exports = {
             newPlayerPos.rotation = newPlayerPos.rotation + params.movementX / 150;
           }
           else {
-            newPlayerPos.rotation = newPlayerPos.rotation + playerTurnSpeed;
+            newPlayerPos.rotation = newPlayerPos.rotation + config.players.turnSpeed;
           }
 
           if (newPlayerPos.rotation < 0) {
