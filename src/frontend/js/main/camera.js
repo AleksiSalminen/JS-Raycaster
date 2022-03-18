@@ -161,7 +161,7 @@ class Camera {
       for (let j = 0; j < level.dimensions.height; j++) {
         let wall = level.walls[j * level.dimensions.width + i];
         if (wall !== 0) {
-          ctx.fillRect(startX + i * stepX, startY + j * stepY, stepX, stepY);
+          ctx.fillRect(startX + i * stepX, startY + j * stepY, stepX+1, stepY+1);
         }
       }
     }

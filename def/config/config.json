@@ -61,7 +61,7 @@
         "minimap": {
             "initialValues": {
                 "show": true,
-                "position": "top-left",
+                "position": "top",
                 "width": 80,
                 "height": 80,
                 "wallColor": "#808080",
