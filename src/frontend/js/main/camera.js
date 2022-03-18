@@ -99,7 +99,7 @@ class Camera {
   /** The main rendering method */
 
   render(player, players, level) {
-    //this.drawSky(player.pos.rotation, level);
+    this.drawSky(player.pos.rotation, level);
     this.drawColumns(player, players, level);
     this.drawWeapon(player.weaponImg);
     if (this.minimap.show) {
@@ -117,7 +117,7 @@ class Camera {
     }
 
     let width = this.skyImg.width * (this.height / this.skyImg.height) * 2;
-    let left = (direction / Math.PI * 2) * -width;
+    let left = (direction / (Math.PI * 2)) * -width;
 
     ctx.save();
     ctx.drawImage(this.skyImg.image, left, 0, width, this.height);
