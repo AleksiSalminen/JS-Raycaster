@@ -109,7 +109,7 @@ class Camera {
     if (this.minimap.show) {
       this.drawMiniMap(player, players, level);
     }
-
+    this.drawItemBelt();
   };
 
   /** Draw sky */
@@ -149,6 +149,71 @@ class Camera {
     ctx.fillStyle = "#FFFFFF";
     ctx.fillText("FPS: "+fps + " / 60     Updates: 30/s" , 20, 13);
     ctx.fillText("Level: "+levelName, this.width-100-20, 13);
+  }
+
+  /** Draw items */
+
+  drawItemBelt() {
+    let ctx = this.ctx;
+
+    let items = 4;
+    let beltHeight = 50;
+    let itemMargin = 5;
+
+    // Draw background
+    ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+    ctx.fillRect(
+      this.width/2 - (items*beltHeight)/2 - itemMargin/2, 
+      this.height-beltHeight, 
+      items*(beltHeight) + itemMargin, 
+      beltHeight
+    );
+
+    // Draw items
+    for (let i = 0;i < items;i++) {
+      // Draw item frames
+      let startX = this.width/2 - items/2*(beltHeight) + itemMargin/2 + i*(beltHeight);
+      let startY = this.height-beltHeight+itemMargin;
+      ctx.fillStyle = "rgb(30, 30, 30)";
+      ctx.fillRect(
+        startX, 
+        startY, 
+        beltHeight-itemMargin, 
+        beltHeight-2*itemMargin
+      );
+
+      
+      // Draw cycles
+      ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+      ctx.beginPath();
+      // Go to frame's center
+      ctx.moveTo(
+        startX + beltHeight/2 - itemMargin/2,
+        startY + beltHeight/2 - itemMargin
+      );
+
+      let percent = i*0.2 + 0.3;
+      let radius = beltHeight/2 - itemMargin;
+      let angleStart = Math.PI*3/2;
+      let angleEnd = Math.PI*2 * percent;
+
+      // Draw an arc
+      // (centerX, centerY, radius, angleStart, angleEnd)
+      ctx.arc(
+        startX + beltHeight/2 - itemMargin/2,
+        startY + beltHeight/2 - itemMargin,
+        radius, angleStart, angleStart + angleEnd
+      );
+
+      // Draw a line to close the shape
+      ctx.lineTo(
+        startX + beltHeight/2 - itemMargin/2,
+        startY + beltHeight/2 - itemMargin
+      );
+
+      // Fill the shape
+      ctx.fill();
+    }
   }
 
   /** Draw maps */
