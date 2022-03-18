@@ -28,7 +28,7 @@ function updateGame (playerNumber, gameState) {
   console.log(gameState);
 
   player = findPlayer(playerNumber, gameState.players);
-  GRAPHICS.updateGraphics(player, gameState.players, gameState.level, gameState.ui);
+  GRAPHICS.updateGraphics(player, gameState.players, gameState.level);
 }
 
 function initGame (gameState) {
