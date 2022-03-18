@@ -48,8 +48,8 @@ function castRay(level, point, angle, range) {
     function getLevelTile(x, y) {
         x = Math.floor(x);
         y = Math.floor(y);
-        if (x < 0 || x > level.width - 1 || y < 0 || y > level.height - 1) return -1;
-        return level.walls[y * level.width + x];
+        if (x < 0 || x > level.dimensions.width - 1 || y < 0 || y > level.dimensions.height - 1) return -1;
+        return level.walls[y * level.dimensions.width + x];
     }
 };
 

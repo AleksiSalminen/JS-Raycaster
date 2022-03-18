@@ -29,7 +29,7 @@ module.exports = {
     for (let i = 0;i < config.levels.length;i++) {
       name = config.levels[i];
       level = new Level(
-        name + ".lvl", 
+        name + ".json", 
         {}, 
         {}
       );

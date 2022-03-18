@@ -113,7 +113,7 @@ Camera.prototype.render = function (player, players, level) {
 
 Camera.prototype.drawSky = function (direction, level) {
   if (skyImg === undefined) {
-    skyImg = new IMG_PROC.Bitmap(skyboxImagePath + level.skybox, 2000, 750);
+    skyImg = new IMG_PROC.Bitmap(skyboxImagePath + level.skybox.fileName, level.skybox.width, level.skybox.height);
   }
   
   let width = skyImg.width * (this.height / skyImg.height) * 2;
@@ -141,8 +141,8 @@ Camera.prototype.drawMiniMap = function (player, players, level) {
   let startY = 0;
   let width = 50;
   let height = 50;
-  let stepX = width / level.width;
-  let stepY = height / level.height;
+  let stepX = width / level.dimensions.width;
+  let stepY = height / level.dimensions.height;
 
   ctx.globalAlpha = 1;
   ctx.fillStyle = "#000000"
@@ -150,9 +150,9 @@ Camera.prototype.drawMiniMap = function (player, players, level) {
   ctx.fillStyle = "#808080";
 
   /** Draw walls */
-  for (let i = 0;i < level.width;i++) {
-    for (let j = 0;j < level.height;j++) {
-      let wall = level.walls[j*level.width + i];
+  for (let i = 0;i < level.dimensions.width;i++) {
+    for (let j = 0;j < level.dimensions.height;j++) {
+      let wall = level.walls[j*level.dimensions.width + i];
       if (wall !== 0) {
         ctx.fillRect(i*stepX, j*stepY, stepX, stepY);
       }
@@ -204,10 +204,14 @@ Camera.prototype.drawColumns = function (player, players, level) {
     let imgID;
     let imgName;
     let texture;
+    let width;
+    let height;
     for (let imgI = 0;imgI < level.wallTextures.length;imgI++) {
       imgID = level.wallTextures[imgI].id;
-      imgName = level.wallTextures[imgI].texture;
-      texture = new IMG_PROC.Bitmap(wallImagePath + imgName, 1024, 1024);
+      imgName = level.wallTextures[imgI].fileName;
+      width = level.wallTextures[imgI].width;
+      height = level.wallTextures[imgI].height;
+      texture = new IMG_PROC.Bitmap(wallImagePath + imgName, width, height);
       wallImages.push({
         id: imgID,
         texture: texture
@@ -268,13 +272,6 @@ Camera.prototype.getWallImg = function (wallID) {
   for (let imgI = 0;imgI < wallImages.length;imgI++) {
     texture = wallImages[imgI];
     txID = texture.id;
-
-    if (txID[0] === "0") {
-      txID = parseInt(txID[1]);
-    }
-    else {
-      txID = parseInt(txID[0] + txID[1]);
-    }
 
     if (txID === wallID) {
       wallImg = texture;

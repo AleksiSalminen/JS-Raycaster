@@ -190,7 +190,7 @@ module.exports = {
         }
 
         let hitWall = false;
-        let playerTileLoc = Math.floor(newPlayerPos.y) * stateCurrent.level.width + Math.floor(newPlayerPos.x);
+        let playerTileLoc = Math.floor(newPlayerPos.y) * stateCurrent.level.dimensions.width + Math.floor(newPlayerPos.x);
         if (stateCurrent.level.getWalls()[playerTileLoc] !== 0) {
           hitWall = true;
         }
