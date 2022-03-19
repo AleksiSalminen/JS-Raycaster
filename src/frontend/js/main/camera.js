@@ -16,8 +16,15 @@ class Camera {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
 
-    this.width = canvas.width = window.innerHeight * 1.0;
-    this.height = canvas.height = (window.innerHeight  - window.innerHeight/20) * 1.0;
+    if (window.innerHeight < window.innerWidth) {
+      this.width = canvas.width = window.innerHeight;
+      this.height = canvas.height = window.innerHeight-window.innerHeight/20;
+    }
+    else {
+      this.width = canvas.width = window.innerWidth;
+      this.height = canvas.height = window.innerWidth-window.innerWidth/20;
+    }
+    
     this.resolution = resolution;
     this.spacing = this.width / resolution;
     this.focalLength = focalLength || 0.8;
